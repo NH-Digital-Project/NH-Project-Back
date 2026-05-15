@@ -1,6 +1,6 @@
 package com.example.demo.domain.user.service;
 
-import com.example.demo.domain.user.dto.request.MyInfoResponse;
+import com.example.demo.domain.user.dto.response.MyInfoResponse;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;

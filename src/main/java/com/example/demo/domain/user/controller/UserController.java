@@ -1,6 +1,6 @@
 package com.example.demo.domain.user.controller;
 
-import com.example.demo.domain.user.dto.request.MyInfoResponse;
+import com.example.demo.domain.user.dto.response.MyInfoResponse;
 import com.example.demo.domain.user.service.UserService;
 import com.example.demo.global.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
