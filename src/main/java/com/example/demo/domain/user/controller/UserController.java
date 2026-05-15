@@ -1,8 +1,24 @@
 package com.example.demo.domain.user.controller;
 
+import com.example.demo.domain.user.service.UserService;
+import com.example.demo.global.common.dto.ApiResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/v1/me")
+@RequiredArgsConstructor
 public class UserController {
 
+    private final UserService userService;
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<String>> deleteMe() {
+        // Todo 하드코딩 제거 필요
+        userService.deleteMe(1L);
+        return ResponseEntity.ok(ApiResponse.success("탈퇴되었습니다."));
+    }
 }
