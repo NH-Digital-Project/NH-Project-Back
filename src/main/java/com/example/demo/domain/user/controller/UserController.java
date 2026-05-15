@@ -18,6 +18,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<MyInfoResponse>> getMyInfo() {
+        // Todo 하드코딩 제거 필요
         return ResponseEntity.ok(ApiResponse.success(userService.getMyInfo(1L)));
     }
 }
