@@ -17,6 +17,7 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
 
+    @Transactional
     public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
         validateDuplicateLoginId(createReqDto.getAdminLoginId());
 
