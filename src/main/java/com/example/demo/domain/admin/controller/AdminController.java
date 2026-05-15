@@ -4,6 +4,7 @@ import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.service.AdminService;
 import com.example.demo.global.common.dto.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class AdminController {
     @PostMapping
     public ResponseEntity<ApiResponse<AdminCreateResDto>> createAdmin(
         //Todo: 사용자(관리자) 검증 필요
-        @RequestBody AdminCreateReqDto createReqDto
+        @Valid @RequestBody AdminCreateReqDto createReqDto
     ){
 
         return ResponseEntity.ok(ApiResponse.success(adminService.createAdmin(createReqDto)));

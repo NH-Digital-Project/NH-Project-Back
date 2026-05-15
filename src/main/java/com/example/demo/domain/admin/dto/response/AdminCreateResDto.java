@@ -8,15 +8,15 @@ import lombok.Getter;
 @Builder
 @Getter
 public class AdminCreateResDto {
-    Long adminId;
-    String adminLoginId;
-    LocalDateTime createAt;
+    private Long adminId;
+    private String adminLoginId;
+    private LocalDateTime createdAt;
 
     public static AdminCreateResDto from(Admin admin){
         return AdminCreateResDto.builder()
                    .adminId(admin.getId())
                    .adminLoginId(admin.getLoginId())
-                   .createAt(admin.getCreatedAt())
+                   .createdAt(admin.getCreatedAt())
                    .build();
     }
 }

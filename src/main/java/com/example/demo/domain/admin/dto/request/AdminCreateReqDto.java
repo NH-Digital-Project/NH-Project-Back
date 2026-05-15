@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class AdminCreateReqDto {
-    String adminLoginId;
-    String password;
+    private String adminLoginId;
+    private String password;
 
     public Admin toEntity(){
         return Admin.builder()
