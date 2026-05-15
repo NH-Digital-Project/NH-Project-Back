@@ -4,17 +4,19 @@ import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.status.ApplicationStatus;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@RequiredArgsConstructor
 public class CreateApplicationResDto {
-    private Long applicationId;
-    private String applicationNumber;
-    private Long userId;
-    private ApplicationStatus status;
-    private LocalDateTime createdAt;
+    private final Long applicationId;
+    private final String applicationNumber;
+    private final Long userId;
+    private final ApplicationStatus status;
+    private final LocalDateTime createdAt;
 
     public static CreateApplicationResDto from(Application application) {
         return CreateApplicationResDto.builder()
