@@ -12,11 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class AdminService {
 
     private final AdminRepository adminRepository;
 
+    @Transactional
     public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
         validateDuplicateLoginId(createReqDto.getAdminLoginId());
 
