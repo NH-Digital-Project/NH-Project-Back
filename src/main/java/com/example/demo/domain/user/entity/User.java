@@ -27,10 +27,13 @@ public class User extends BaseEntity {
     private Boolean applied;
 
 
-    private User(Long id, String naverId, String naverName, Boolean applied) {
-        this.id = id;
+    private User(String naverId, String naverName, Boolean applied) {
         this.naverId = naverId;
         this.naverName = naverName;
         this.applied = applied;
+    }
+
+    public static User create(String naverId, String naverName) {
+        return new User(naverId, naverName, false);
     }
 }
