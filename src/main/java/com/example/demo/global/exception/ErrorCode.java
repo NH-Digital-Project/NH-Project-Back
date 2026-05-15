@@ -11,6 +11,7 @@ public enum ErrorCode {
     // Auth
 
     // User
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
 
     // Admin
     DUPLICATED_LOGIN_ID(HttpStatus.CONFLICT, "중복된 관리자 아이디가 있습니다."),
