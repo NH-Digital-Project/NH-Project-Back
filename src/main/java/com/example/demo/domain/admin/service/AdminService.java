@@ -30,9 +30,24 @@ public class AdminService {
 
     }
 
+    @Transactional
+    public void deleteAdmin(Long adminId) {
+        Admin admin = findByAdmin(adminId);
+
+        adminRepository.delete(admin);
+    }
+
     private void validateDuplicateLoginId(String adminLoginId){
         if(adminRepository.existsByLoginId(adminLoginId)){
             throw new CustomException(ErrorCode.DUPLICATED_LOGIN_ID);
         }
     }
+
+    private Admin findByAdmin(Long adminId){
+        return adminRepository.findById(adminId).orElseThrow(
+            () -> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+    }
+
+
 }
