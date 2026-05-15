@@ -3,13 +3,13 @@ package com.example.demo.domain.admin.dto.request;
 
 import com.example.demo.domain.admin.entity.Admin;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public class AdminCreateReqDto {
-    private String adminLoginId;
-    private String password;
+    private final String adminLoginId;
+    private final String password;
 
     public Admin toEntity(){
         return Admin.builder()
