@@ -11,6 +11,7 @@ public enum ErrorCode {
     // Auth
 
     // User
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
 
     // Common
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),
