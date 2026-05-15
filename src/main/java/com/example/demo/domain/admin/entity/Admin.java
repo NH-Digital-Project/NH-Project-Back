@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ public class Admin extends BaseEntity {
 
     private String password;
 
+    @Builder
     private Admin(Long id, String loginId, String password) {
         this.id = id;
         this.loginId = loginId;
