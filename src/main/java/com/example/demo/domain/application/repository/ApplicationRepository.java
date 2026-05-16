@@ -1,6 +1,5 @@
 package com.example.demo.domain.application.repository;
 
-import aj.org.objectweb.asm.commons.Remapper;
 import com.example.demo.domain.application.entity.Application;
 import org.springframework.data.jpa.repository.JpaRepository;
 
