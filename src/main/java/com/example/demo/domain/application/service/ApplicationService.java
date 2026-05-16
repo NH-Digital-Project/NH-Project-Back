@@ -40,7 +40,7 @@ public class ApplicationService {
         validateBirthDate(request.getBirthDate());
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_REQUEST)); // TODO: User ErrorCode로 추후 수정
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 계정당 1번 지원 검증
         if(applicationRepository.existsByUserId(userId)) {
