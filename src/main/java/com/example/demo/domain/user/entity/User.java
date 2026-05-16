@@ -9,12 +9,10 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE users SET deleted_at = NOW() WHERE id = ?") // repository.delete() 방지
 @SQLRestriction("deleted_at IS NULL") // 모든 select 쿼리 시 삭제 안 된 것만 조회
 @Table(name = "users")
 @Entity
