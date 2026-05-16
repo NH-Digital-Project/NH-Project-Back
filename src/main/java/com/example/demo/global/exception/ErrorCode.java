@@ -13,6 +13,9 @@ public enum ErrorCode {
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
 
+    // Admin
+    DUPLICATED_LOGIN_ID(HttpStatus.CONFLICT, "중복된 관리자 아이디가 있습니다."),
+
     // Common
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
