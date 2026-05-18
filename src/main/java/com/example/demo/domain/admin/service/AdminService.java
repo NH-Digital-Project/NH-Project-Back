@@ -32,7 +32,7 @@ public class AdminService {
 
     @Transactional
     public void deleteAdmin(Long adminId) {
-        Admin admin = findByAdmin(adminId);
+        Admin admin = findAdminById(adminId);
 
         adminRepository.delete(admin);
     }
@@ -43,7 +43,7 @@ public class AdminService {
         }
     }
 
-    private Admin findByAdmin(Long adminId){
+    private Admin findAdminById(Long adminId){
         return adminRepository.findById(adminId).orElseThrow(
             () -> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
         );
