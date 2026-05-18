@@ -7,6 +7,8 @@ import com.example.demo.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +30,14 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.success(adminService.createAdmin(createReqDto)));
 
 
+    }
+
+    @DeleteMapping("/{adminId}")
+    public ResponseEntity<ApiResponse<String>> deleteAdmin(
+        @PathVariable Long adminId
+    ){
+        adminService.deleteAdmin(adminId);
+        // 현재 ApiResponse에서 성공시 데이터만 넘기고 있는데 메시지를 data로 넘기는게 어색한데 ApiResponse에 메시지 필드를 추가하는건 어떤지?
+        return ResponseEntity.ok(ApiResponse.successWithMessage("계정정보가 삭제되었습니다."));
     }
 }

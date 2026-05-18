@@ -16,7 +16,7 @@ public enum ErrorCode {
 
     // Admin
     DUPLICATED_LOGIN_ID(HttpStatus.CONFLICT, "중복된 관리자 아이디가 있습니다."),
-  
+    ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 관리자입니다."),
 
     // Common
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),

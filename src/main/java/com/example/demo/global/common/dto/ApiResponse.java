@@ -10,13 +10,18 @@ public class ApiResponse<T> {
     private final boolean success; // 성공 여부
     private final T data; // 응답 데이터
     private final ApiError error; // 에러
+    private final String message;
+
 
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(true, data, null);
+        return new ApiResponse<>(true, data, null,null);
     }
 
     public static <T> ApiResponse<T> error(ApiError error) {
-        return new ApiResponse<>(false, null, error);
+        return new ApiResponse<>(false, null, error,null);
     }
 
+    public static ApiResponse<String> successWithMessage(String message) {
+        return new ApiResponse<>(true, null, null, message);
+    }
 }
