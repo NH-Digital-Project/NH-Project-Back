@@ -33,30 +33,42 @@ public class AdminService {
     }
 
     @Transactional
-    public void deleteAdmin(Long adminId) {
-        Admin admin = findAdminById(adminId);
+    public void deleteAdmin(Long requestAdminId, Long targetAdminId) {
 
-        adminRepository.delete(admin);
+        validateAdminId(requestAdminId);
+
+        Admin targetAdmin = findAdminById(targetAdminId);
+
+        adminRepository.delete(targetAdmin);
     }
 
-    private void validateDuplicateLoginId(String adminLoginId){
-        if(adminRepository.existsByLoginId(adminLoginId)){
-            throw new CustomException(ErrorCode.DUPLICATED_LOGIN_ID);
-        }
-    }
+    public AdminListResDto getAdmins(Long requestAdminId) {
 
-    private Admin findAdminById(Long adminId){
-        return adminRepository.findById(adminId).orElseThrow(
-            () -> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
-        );
-    }
-
-
-    public AdminListResDto getAdmins() {
-
+        validateAdminId(requestAdminId);
 
         List<Admin> admins  = adminRepository.findAll();
 
         return AdminListResDto.from(admins);
     }
+
+    private void validateDuplicateLoginId(String targetAdminLoginId){
+        if(adminRepository.existsByLoginId(targetAdminLoginId)){
+            throw new CustomException(ErrorCode.DUPLICATED_LOGIN_ID);
+        }
+    }
+
+    private Admin findAdminById(Long targetAdminId){
+        return adminRepository.findById(targetAdminId).orElseThrow(
+            () -> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+    }
+
+    private void validateAdminId(Long targetAdminId) {
+      adminRepository.findById(targetAdminId).orElseThrow(
+          ()-> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
+      );
+    }
+
+
+
 }
