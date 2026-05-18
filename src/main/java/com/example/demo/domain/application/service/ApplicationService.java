@@ -1,6 +1,7 @@
 package com.example.demo.domain.application.service;
 
 import com.example.demo.domain.application.dto.request.ApplicationReqDto;
+import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.domain.application.dto.response.CreateApplicationResDto;
 import com.example.demo.domain.application.entity.Address;
 import com.example.demo.domain.application.entity.Application;
@@ -120,5 +121,12 @@ public class ApplicationService {
                 })
                 // 당일 접수된 지원이 없다면 접수날짜에 0000을 붙여 반환
                 .orElse(date + "0000");
+    }
+
+    public ApplicationResDto getMyApplication(Long userId) {
+        Application application = applicationRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        return ApplicationResDto.from(application);
     }
 }
