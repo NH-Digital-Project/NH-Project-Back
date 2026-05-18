@@ -2,6 +2,7 @@ package com.example.demo.domain.application.service;
 
 import com.example.demo.domain.application.dto.request.ApplicationReqDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
+import com.example.demo.domain.application.dto.response.ApplicationStatusResDto;
 import com.example.demo.domain.application.dto.response.CreateApplicationResDto;
 import com.example.demo.domain.application.entity.Address;
 import com.example.demo.domain.application.entity.Application;
@@ -128,5 +129,15 @@ public class ApplicationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
 
         return ApplicationResDto.from(application);
+    }
+
+    public ApplicationStatusResDto getMyApplicationStatus(Long userId) {
+        Application application = applicationRepository.findByUserId(userId).orElse(null);
+
+        if(application == null) {
+            return null;
+        }
+
+        return ApplicationStatusResDto.from(application);
     }
 }

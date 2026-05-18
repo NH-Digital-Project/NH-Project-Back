@@ -1,6 +1,7 @@
 package com.example.demo.domain.application.controller;
 
 import com.example.demo.domain.application.dto.request.ApplicationReqDto;
+import com.example.demo.domain.application.dto.response.ApplicationStatusResDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.domain.application.dto.response.CreateApplicationResDto;
 import com.example.demo.domain.application.service.ApplicationService;
@@ -33,6 +34,12 @@ public class ApplicationController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<ApplicationResDto>> getMyApplication() {
         ApplicationResDto response = applicationService.getMyApplication(USER_ID);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/me/status")
+    public ResponseEntity<ApiResponse<ApplicationStatusResDto>>  getMyApplicationStatus() {
+        ApplicationStatusResDto response = applicationService.getMyApplicationStatus(USER_ID);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
