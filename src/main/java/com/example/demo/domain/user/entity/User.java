@@ -22,9 +22,11 @@ public class User extends BaseSoftDeleteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String naverId;
+    private String naverId; // Todo 필드명 수정 예정
 
-    private String naverName;
+    private String naverName; // Todo userName으로 수정 필요
+
+    // Todo email 필드 추가 필요
 
     private Boolean applied;
 
