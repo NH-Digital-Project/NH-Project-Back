@@ -10,12 +10,14 @@ import lombok.Getter;
 public class AdminSummaryDto {
     private final Long adminId;
     private final String adminLoginId;
+    private final String adminName;
     private final LocalDateTime createdAt;
 
     public static AdminSummaryDto from(Admin admin) {
         return AdminSummaryDto.builder()
                    .adminId(admin.getId())
                    .adminLoginId(admin.getLoginId())
+                   .adminName(admin.getAdminName())
                    .createdAt(admin.getCreatedAt())
                    .build();
     }
