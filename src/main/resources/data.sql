@@ -27,12 +27,14 @@ INSERT INTO users (
 INSERT INTO admins (
     id,
     login_id,
+    admin_name,
     password,
     created_at
 ) VALUES
     (
         1,
         'admin',
+        '황관리자',
         'admin1234',
         NOW()
     );
