@@ -11,4 +11,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     // 전달받은 날짜(today)로 시작하는 지원서 번호를 내림차순으로 정렬하여 가장 최근 번호 조회
     Optional<Application> findTopByApplicationNumberStartingWithOrderByApplicationNumberDesc(String today);
+
+    Optional<Application> findByUserId(Long userId);
 }
