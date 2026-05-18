@@ -48,9 +48,7 @@ public class CustomOAuth2UserService implements OAuth2UserService {
     }
 
     private User saveOrUpdate(OAuthAttributes attributes) {
-        User user = userRepository.findByNaverId(attributes.getNaverId())
-            .orElse(attributes.toEntity());
-
-        return userRepository.save(user);
+        return userRepository.findByNaverId(attributes.getNaverId())
+            .orElseGet(() -> userRepository.save(attributes.toEntity()));
     }
 }
