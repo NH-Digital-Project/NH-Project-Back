@@ -140,4 +140,24 @@ public class ApplicationService {
 
         return ApplicationStatusResDto.from(application);
     }
+
+    @Transactional
+    public void deleteMyApplication(Long userId) {
+        Application application = applicationRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        // 취소 가능 시간 검증
+        validateCancelPeriod();
+
+        application.cancel();
+    }
+
+    private void validateCancelPeriod() {
+        LocalDateTime now = LocalDateTime.now();
+
+        // 신청 기간 내 + 마감 1시간 전까지 취소 가능
+        if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME.minusHours(1))) {
+            throw new CustomException(ErrorCode.INVALID_CANCEL_PERIOD);
+        }
+    }
 }
