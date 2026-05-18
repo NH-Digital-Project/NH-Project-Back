@@ -2,10 +2,12 @@ package com.example.demo.domain.admin.service;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
+import com.example.demo.domain.admin.dto.response.AdminListResDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,23 +33,42 @@ public class AdminService {
     }
 
     @Transactional
-    public void deleteAdmin(Long adminId) {
-        Admin admin = findAdminById(adminId);
+    public void deleteAdmin(Long requestAdminId, Long targetAdminId) {
 
-        adminRepository.delete(admin);
+        validateAdminId(requestAdminId);
+
+        Admin targetAdmin = findAdminById(targetAdminId);
+
+        adminRepository.delete(targetAdmin);
     }
 
-    private void validateDuplicateLoginId(String adminLoginId){
-        if(adminRepository.existsByLoginId(adminLoginId)){
+    public AdminListResDto getAdmins(Long requestAdminId) {
+
+        validateAdminId(requestAdminId);
+
+        List<Admin> admins  = adminRepository.findAll();
+
+        return AdminListResDto.from(admins);
+    }
+
+    private void validateDuplicateLoginId(String targetAdminLoginId){
+        if(adminRepository.existsByLoginId(targetAdminLoginId)){
             throw new CustomException(ErrorCode.DUPLICATED_LOGIN_ID);
         }
     }
 
-    private Admin findAdminById(Long adminId){
-        return adminRepository.findById(adminId).orElseThrow(
+    private Admin findAdminById(Long targetAdminId){
+        return adminRepository.findById(targetAdminId).orElseThrow(
             () -> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
         );
     }
+
+    private void validateAdminId(Long requestAdminId) {
+      adminRepository.findById(requestAdminId).orElseThrow(
+          ()-> new CustomException(ErrorCode.ADMIN_UNAUTHORIZED)
+      );
+    }
+
 
 
 }
