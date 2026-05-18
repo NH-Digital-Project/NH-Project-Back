@@ -2,25 +2,29 @@ package com.example.demo.domain.application.entity;
 
 import com.example.demo.domain.application.status.ApplicationStatus;
 import com.example.demo.domain.user.entity.User;
-import com.example.demo.global.common.entity.BaseEntity;
+import com.example.demo.global.common.entity.BaseSoftDeleteEntity;
+import com.example.demo.global.exception.CustomException;
+import com.example.demo.global.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "applications")
 @Entity
-public class Application extends BaseEntity {
+@SQLRestriction("deleted_at IS NULL")
+public class Application extends BaseSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id") // 취소 후 재지원을 위해 unique = true 조건 제거
     private User user;
 
     private String userName;
@@ -95,6 +99,16 @@ public class Application extends BaseEntity {
         this.availableQuantity = availableQuantity;
         this.fundingPlan = fundingPlan;
         this.status = status != null ? status : ApplicationStatus.SUBMITTED;
+    }
+
+    public void cancel() {
+        // ApplicationStatus가 SUBMITTED일때만 취소 가능
+        if(this.status != ApplicationStatus.SUBMITTED) {
+            throw new CustomException(ErrorCode.APPLICATION_NOT_DELETABLE);
+        }
+
+        this.status = ApplicationStatus.CANCELED;
+        this.delete();
     }
 }
 
