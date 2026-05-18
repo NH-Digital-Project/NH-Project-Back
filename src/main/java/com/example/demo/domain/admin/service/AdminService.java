@@ -63,9 +63,9 @@ public class AdminService {
         );
     }
 
-    private void validateAdminId(Long targetAdminId) {
-      adminRepository.findById(targetAdminId).orElseThrow(
-          ()-> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
+    private void validateAdminId(Long requestAdminId) {
+      adminRepository.findById(requestAdminId).orElseThrow(
+          ()-> new CustomException(ErrorCode.ADMIN_UNAUTHORIZED)
       );
     }
 
