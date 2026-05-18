@@ -4,11 +4,10 @@ import com.example.demo.domain.admin.entity.Admin;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Builder
 @Getter
-public class AdminListResDto{
+public class AdminListResDto {
     private final Integer totalCount;
     private final List<AdminSummaryDto> admins;
 

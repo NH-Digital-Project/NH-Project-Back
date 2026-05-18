@@ -7,7 +7,6 @@ import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,7 +54,6 @@ public class AdminService {
 
     public AdminListResDto getAdmins() {
 
-//        List<Admin> admins = new ArrayList<>();
 
         List<Admin> admins  = adminRepository.findAll();
 
