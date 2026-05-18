@@ -38,6 +38,6 @@ public class AdminController {
     ){
         adminService.deleteAdmin(adminId);
         // 현재 ApiResponse에서 성공시 데이터만 넘기고 있는데 메시지를 data로 넘기는게 어색한데 ApiResponse에 메시지 필드를 추가하는건 어떤지?
-        return ResponseEntity.ok(ApiResponse.success("계정정보가 삭제되었습니다."));
+        return ResponseEntity.ok(ApiResponse.successWithMessage("계정정보가 삭제되었습니다."));
     }
 }
