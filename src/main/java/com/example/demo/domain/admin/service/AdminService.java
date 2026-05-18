@@ -2,10 +2,13 @@ package com.example.demo.domain.admin.service;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
+import com.example.demo.domain.admin.dto.response.AdminListResDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,4 +53,12 @@ public class AdminService {
     }
 
 
+    public AdminListResDto getAdmins() {
+
+//        List<Admin> admins = new ArrayList<>();
+
+        List<Admin> admins  = adminRepository.findAll();
+
+        return AdminListResDto.from(admins);
+    }
 }
