@@ -12,12 +12,14 @@ import lombok.RequiredArgsConstructor;
 public class AdminCreateResDto {
     private final Long adminId;
     private final String adminLoginId;
+    private final String adminName;
     private final LocalDateTime createdAt;
 
     public static AdminCreateResDto from(Admin admin){
         return AdminCreateResDto.builder()
                    .adminId(admin.getId())
                    .adminLoginId(admin.getLoginId())
+                   .adminName(admin.getAdminName())
                    .createdAt(admin.getCreatedAt())
                    .build();
     }
