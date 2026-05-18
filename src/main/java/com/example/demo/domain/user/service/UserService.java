@@ -1,5 +1,7 @@
 package com.example.demo.domain.user.service;
 
+
+import com.example.demo.domain.user.dto.response.MyInfoResponse;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
@@ -15,6 +17,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+
+    public MyInfoResponse getMyInfo(Long userId) {
+      
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        return MyInfoResponse.from(user);
+    }
+  
+  
     @Transactional
     public void deleteMe(Long userId) {
 

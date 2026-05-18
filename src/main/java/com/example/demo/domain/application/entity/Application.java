@@ -1,17 +1,11 @@
 package com.example.demo.domain.application.entity;
 
+import com.example.demo.domain.application.status.ApplicationStatus;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.global.common.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,7 +35,8 @@ public class Application extends BaseEntity {
 
     private String affiliatedNhName;
 
-    private String farmAddress;
+    @Embedded
+    private Address farmAddress;
 
     private String businessRegistrationNumber;
 
@@ -68,12 +63,16 @@ public class Application extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String fundingPlan;
 
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status;
+
+    @Builder
     private Application(Long id, User user, String userName, String birthDate, String phoneNumber,
-        String applicationNumber, String farmName, String affiliatedNhName, String farmAddress,
+        String applicationNumber, String farmName, String affiliatedNhName, Address farmAddress,
         String businessRegistrationNumber, String mainProduct, Integer annualSales,
         Boolean onlineDistributionExperience, String productCategory, String shippingDate,
         String fundingDesiredDate, String productName, String productSize, Integer sellingPrice,
-        Integer availableQuantity, String fundingPlan) {
+        Integer availableQuantity, String fundingPlan, ApplicationStatus status) {
         this.id = id;
         this.user = user;
         this.userName = userName;
@@ -95,6 +94,7 @@ public class Application extends BaseEntity {
         this.sellingPrice = sellingPrice;
         this.availableQuantity = availableQuantity;
         this.fundingPlan = fundingPlan;
+        this.status = status != null ? status : ApplicationStatus.SUBMITTED;
     }
 }
 
