@@ -54,36 +54,38 @@ public class AdminService {
 
         validateAdminId(requestAdminId);
 
-        List<Admin> admins  = adminRepository.findAll();
+        List<Admin> admins = adminRepository.findAll();
 
         return AdminListResDto.from(admins);
     }
 
-    private void validateDuplicateLoginId(String targetAdminLoginId){
-        if(adminRepository.existsByLoginId(targetAdminLoginId)){
+    private void validateDuplicateLoginId(String targetAdminLoginId) {
+        if (adminRepository.existsByLoginId(targetAdminLoginId)) {
             throw new CustomException(ErrorCode.DUPLICATED_LOGIN_ID);
         }
     }
 
-    private Admin findAdminById(Long targetAdminId){
+    private Admin findAdminById(Long targetAdminId) {
         return adminRepository.findById(targetAdminId).orElseThrow(
             () -> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
         );
     }
 
     private void validateAdminId(Long requestAdminId) {
-      adminRepository.findById(requestAdminId).orElseThrow(
-          ()-> new CustomException(ErrorCode.ADMIN_UNAUTHORIZED)
-      );
+        adminRepository.findById(requestAdminId).orElseThrow(
+            () -> new CustomException(ErrorCode.ADMIN_UNAUTHORIZED)
+        );
     }
 
 
     public ApplicationListResDto getApplications(int page, int size, String keyword) {
-        Pageable pageable = PageRequest.of(page-1 , size , Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(page - 1, size,
+            Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        Page<Application> applicationPage =  (keyword == null || keyword.isBlank())
-                                                 ? applicationRepository.findAll(pageable)
-                                                 : applicationRepository.findByUserNameContainingOrFarmNameContaining(keyword, keyword, pageable);
+        Page<Application> applicationPage = (keyword == null || keyword.isBlank())
+                                                ? applicationRepository.findAll(pageable)
+                                                : applicationRepository.findByUserNameContainingOrFarmNameContaining(
+                                                    keyword, keyword, pageable);
 
         return ApplicationListResDto.from(applicationPage);
     }

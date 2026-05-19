@@ -5,7 +5,6 @@ import com.example.demo.domain.application.status.ApplicationStatus;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Builder
 @Getter
