@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.URL;
 
 @Getter
 @RequiredArgsConstructor
@@ -27,6 +28,7 @@ public class ProjectCreateReqDto {
     @NotNull(message = "진행 상태값은 필수입니다.")
     private final ProjectStatus status;
 
+    @URL(message = "올바른 URL 형식이 아닙니다.")
     @NotBlank(message = "해피빈 URL은 필수입니다.")
     private final String happyBeanUrl;
 }
