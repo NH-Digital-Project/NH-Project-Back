@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 
 public record MyInfoResponse (
     Long userId,
-    String naverId,
-    String naverName,
+    String oauthId,
+    String userName,
     LocalDateTime createdAt
 ) {
 
     public static MyInfoResponse from(User user) {
-        return new MyInfoResponse(user.getId(), user.getNaverId(), user.getNaverName(),
+        return new MyInfoResponse(user.getId(), user.getOauthId(), user.getUserName(),
             user.getCreatedAt());
     }
 

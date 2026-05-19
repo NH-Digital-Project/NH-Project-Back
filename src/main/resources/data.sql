@@ -1,8 +1,10 @@
 -- 사용자
 INSERT INTO users (
     id,
-    naver_id,
-    naver_name,
+    oauth_id,
+    user_name,
+    email,
+    role,
     applied,
     created_at,
     updated_at
@@ -11,6 +13,8 @@ INSERT INTO users (
           1,
           'naver_1001',
           '김민수',
+       'test@gmail.com',
+       'ROLE_USER',
           true,
           NOW(),
           NOW()
@@ -19,6 +23,8 @@ INSERT INTO users (
           2,
           'naver_1002',
           '박지연',
+       'test2@gmail.com',
+       'ROLE_USER',
           false,
           NOW(),
           NOW()

@@ -2,14 +2,12 @@ package com.example.demo.global.security.oauth;
 
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
-import java.util.Collections;
+import com.example.demo.global.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -40,15 +38,13 @@ public class CustomOAuth2UserService implements OAuth2UserService {
 
         User user = saveOrUpdate(attributes);
 
-        return new DefaultOAuth2User(
-            Collections.singleton(new SimpleGrantedAuthority(ROLE_USER)),
-            attributes.getAttributes(),
-            attributes.getNameAttributeKey()
+        return new PrincipalDetails(
+            user.getId(), user.getRole().name(), attributes.getAttributes()
         );
     }
 
     private User saveOrUpdate(OAuthAttributes attributes) {
-        return userRepository.findByNaverId(attributes.getNaverId())
+        return userRepository.findByOauthId(attributes.getOauthId())
             .orElseGet(() -> userRepository.save(attributes.toEntity()));
     }
 }
