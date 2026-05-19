@@ -57,5 +57,16 @@ public class Project extends BaseEntity {
         this.projectStatus = projectStatus;
         this.happyBeanUrl = happyBeanUrl;
     }
+
+    public void update(String farmName, String productCategory,
+                                  String thumbnailImageUrl, String description,
+                                  ProjectStatus projectStatus, String happyBeanUrl) {
+        if (farmName != null) this.farmName = farmName;
+        if (productCategory != null) this.productCategory = productCategory;
+        if (thumbnailImageUrl != null) this.thumbnailImageUrl = thumbnailImageUrl;
+        if (description != null) this.description = description;
+        if (projectStatus != null) this.projectStatus = projectStatus;
+        if (happyBeanUrl != null) this.happyBeanUrl = happyBeanUrl;
+    }
 }
 
