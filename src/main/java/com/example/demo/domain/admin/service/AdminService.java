@@ -78,8 +78,13 @@ public class AdminService {
     }
 
 
-    public ApplicationListResDto getApplications(int page, int size, String keyword) {
-        Pageable pageable = PageRequest.of(page - 1, size,
+    public ApplicationListResDto getApplications(Integer page, Integer size, String keyword) {
+
+        if (page < 1) {
+            throw new CustomException(ErrorCode.INVALID_PAGE);
+        }
+
+        Pageable pageable = PageRequest.of(page-1, size,
             Sort.by(Sort.Direction.DESC, "createdAt"));
 
         Page<Application> applicationPage = (keyword == null || keyword.isBlank())
@@ -87,6 +92,17 @@ public class AdminService {
                                                 : applicationRepository.findByUserNameContainingOrFarmNameContaining(
                                                     keyword, keyword, pageable);
 
+        checkValidatePage(page,applicationPage);
+
         return ApplicationListResDto.from(applicationPage);
+    }
+
+    private void checkValidatePage (Integer page, Page<Application> applicationPage ){
+        if(applicationPage.getTotalElements() == 0){
+            throw new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
+        }
+        if(page > applicationPage.getTotalPages()){
+            throw new CustomException(ErrorCode.INVALID_PAGE);
+        }
     }
 }
