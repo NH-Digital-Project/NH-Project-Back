@@ -12,23 +12,23 @@ public class OAuthAttributes {
 
     private static final String ID = "id";
     private static final String NAME = "name";
+    private static final String EMAIL = "email";
 
     private Map<String, Object> attributes;
-    private String nameAttributeKey;
-    private String naverId;
-    private String naverName;
-    // Todo 이메일 추가 필요
+    private String oauthId;
+    private String userName;
+    private String email;
 
     // 정적 팩토리 메서드
     public static OAuthAttributes ofNaver(String userNameAttributeName,
         Map<String, Object> attributes) {
         Map<String, Object> response = (Map<String, Object>) attributes.get(userNameAttributeName);
 
-        return new OAuthAttributes(attributes, userNameAttributeName, (String) response.get(ID),
-            (String) response.get(NAME));
+        return new OAuthAttributes(attributes, (String) response.get(ID),
+            (String) response.get(NAME), (String) response.get(EMAIL));
     }
 
     public User toEntity() {
-        return User.create(naverId, naverName);
+        return User.createUser(oauthId, userName, email);
     }
 }
