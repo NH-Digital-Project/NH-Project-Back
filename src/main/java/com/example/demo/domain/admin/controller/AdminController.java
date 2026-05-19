@@ -55,8 +55,8 @@ public class AdminController {
     // 관리자가 지원자의 목록을 조회하는 API
     @GetMapping("/applications")
     public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "1") Integer page,
+        @RequestParam(defaultValue = "10") Integer size,
         @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(

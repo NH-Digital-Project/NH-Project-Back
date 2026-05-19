@@ -10,9 +10,9 @@ import org.springframework.data.domain.Page;
 @Getter
 public class ApplicationListResDto {
 
-    private final int currentPage;
+    private final Integer currentPage;
     private final Long totalCount;
-    private final int totalPages;
+    private final Integer totalPages;
     private final List<ApplicationSummaryDto> applications;
 
     public static ApplicationListResDto from(Page<Application> applications) {
