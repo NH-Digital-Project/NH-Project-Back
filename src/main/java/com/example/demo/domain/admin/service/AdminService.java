@@ -82,29 +82,35 @@ public class AdminService {
 
         validateAdminId(userId);
 
-        if (page < 1) {
-            throw new CustomException(ErrorCode.INVALID_PAGE);
-        }
-
         Pageable pageable = PageRequest.of(page-1, size,
             Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        Page<Application> applicationPage = (keyword == null || keyword.isBlank())
-                                                ? applicationRepository.findAll(pageable)
-                                                : applicationRepository.findByUserNameContainingOrFarmNameContaining(
-                                                    keyword, keyword, pageable);
+
+
+        Page<Application> applicationPage = findApplications(keyword, pageable);
+
+        if(page > applicationPage.getTotalPages()){
+            pageable = PageRequest.of(applicationPage.getTotalPages()-1, size,
+                Sort.by(Sort.Direction.DESC, "createdAt"));
+            applicationPage = findApplications(keyword, pageable);
+        }
 
         checkValidatePage(page,applicationPage);
 
+
         return ApplicationListResDto.from(applicationPage);
+    }
+    private Page<Application> findApplications(String keyword, Pageable pageable) {
+        if (keyword == null || keyword.isBlank()) {
+            return applicationRepository.findAll(pageable);
+        }
+        return applicationRepository.findByUserNameContainingOrFarmNameContaining(keyword, keyword, pageable);
     }
 
     private void checkValidatePage (Integer page, Page<Application> applicationPage ){
         if(applicationPage.getTotalElements() == 0){
             throw new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
         }
-        if(page > applicationPage.getTotalPages()){
-            throw new CustomException(ErrorCode.INVALID_PAGE);
-        }
+
     }
 }
