@@ -16,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private static final String URI_STR = "http://localhost:3000/oauth2/redirect";
+    private static final String URI_STR = "http://13.124.217.214:3000/oauth2/redirect";
     private static final String TOKEN = "token";
 
     private final JwtProvider jwtProvider;
