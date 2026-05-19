@@ -1,16 +1,14 @@
 package com.example.demo.domain.project.controller;
 
 import com.example.demo.domain.project.dto.request.ProjectCreateReqDto;
+import com.example.demo.domain.project.dto.request.ProjectUpdateReqDto;
 import com.example.demo.domain.project.service.ProjectService;
 import com.example.demo.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +23,14 @@ public class ProjectController {
         projectService.createProject(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.successWithMessage("선정업체가 등록되었습니다."));
+    }
+
+    @PatchMapping("/{projectId}")
+    public ResponseEntity<ApiResponse<String>> updateProject(
+            @PathVariable Long projectId,
+            @RequestBody ProjectUpdateReqDto request
+            ) {
+        projectService.updateProject(projectId, request);
+        return ResponseEntity.ok(ApiResponse.successWithMessage("정보가 수정되었습니다."));
     }
 }
