@@ -28,8 +28,8 @@ public class ProjectController {
     @PatchMapping("/{projectId}")
     public ResponseEntity<ApiResponse<String>> updateProject(
             @PathVariable Long projectId,
-            @RequestBody ProjectUpdateReqDto request
-            ) {
+            @Valid @RequestBody ProjectUpdateReqDto request
+    ) {
         projectService.updateProject(projectId, request);
         return ResponseEntity.ok(ApiResponse.successWithMessage("정보가 수정되었습니다."));
     }
