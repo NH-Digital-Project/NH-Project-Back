@@ -23,13 +23,16 @@ public class Admin extends BaseEntity {
 
     private String loginId;
 
+    private String adminName;
+
     private String password;
 
     @Builder
-    private Admin(Long id, String loginId, String password) {
+    private Admin(Long id, String loginId, String password , String adminName) {
         this.id = id;
         this.loginId = loginId;
         this.password = password;
+        this.adminName = adminName;
     }
 }
 
