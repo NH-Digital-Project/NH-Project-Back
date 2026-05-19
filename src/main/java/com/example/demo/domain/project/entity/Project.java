@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,6 +44,7 @@ public class Project extends BaseEntity {
 
     private String happyBeanUrl;
 
+    @Builder
     private Project(Long id, Application application, String farmName, String productCategory,
         String thumbnailImageUrl, String description, ProjectStatus projectStatus,
         String happyBeanUrl) {
