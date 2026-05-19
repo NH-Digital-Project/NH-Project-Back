@@ -42,4 +42,10 @@ public class ApplicationController {
         ApplicationStatusResDto response = applicationService.getMyApplicationStatus(USER_ID);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<ApiResponse<String>> deleteMyApplication() {
+        applicationService.deleteMyApplication(USER_ID);
+        return ResponseEntity.ok(ApiResponse.successWithMessage("지원이 취소되었습니다."));
+    }
 }
