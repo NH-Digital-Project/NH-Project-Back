@@ -1,6 +1,8 @@
 package com.example.demo.domain.application.repository;
 
 import com.example.demo.domain.application.entity.Application;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -13,4 +15,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Optional<Application> findTopByApplicationNumberStartingWithOrderByApplicationNumberDesc(String today);
 
     Optional<Application> findByUserId(Long userId);
+
+    Page<Application> findByUserNameContainingOrFarmNameContaining(String userName, String farmName, Pageable pageable);
 }
