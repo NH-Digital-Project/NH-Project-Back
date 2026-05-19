@@ -78,7 +78,9 @@ public class AdminService {
     }
 
 
-    public ApplicationListResDto getApplications(Integer page, Integer size, String keyword) {
+    public ApplicationListResDto getApplications(Long userId , Integer page, Integer size, String keyword) {
+
+        validateAdminId(userId);
 
         if (page < 1) {
             throw new CustomException(ErrorCode.INVALID_PAGE);

@@ -63,6 +63,6 @@ public class AdminController {
         @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(
-            ApiResponse.success(adminService.getApplications(page, size, keyword)));
+            ApiResponse.success(adminService.getApplications(USER_ID, page, size, keyword)));
     }
 }
