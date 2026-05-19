@@ -42,3 +42,4 @@ out/
 
 # IntelliJ IDEA user-specific files
 .idea/shelf/
+.env

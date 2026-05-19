@@ -110,5 +110,13 @@ public class Application extends BaseSoftDeleteEntity {
         this.status = ApplicationStatus.CANCELED;
         this.delete();
     }
+
+    // 선정업체 등록 시 상태를 APPROVED로 변경
+    public void approve() {
+        if (this.status != ApplicationStatus.SUBMITTED) {
+            throw new CustomException(ErrorCode.INVALID_APPLICATION_STATUS);
+        }
+        this.status = ApplicationStatus.APPROVED;
+    }
 }
 
