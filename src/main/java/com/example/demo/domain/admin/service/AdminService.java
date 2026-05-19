@@ -3,12 +3,19 @@ package com.example.demo.domain.admin.service;
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
+import com.example.demo.domain.application.entity.Application;
+import com.example.demo.domain.application.repository.ApplicationRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminService {
 
     private final AdminRepository adminRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Transactional
     public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
@@ -70,5 +78,13 @@ public class AdminService {
     }
 
 
+    public ApplicationListResDto getApplications(int page, int size, String keyword) {
+        Pageable pageable = PageRequest.of(page-1 , size , Sort.by(Sort.Direction.DESC, "createdAt"));
 
+        Page<Application> applicationPage =  (keyword == null || keyword.isBlank())
+                                                 ? applicationRepository.findAll(pageable)
+                                                 : applicationRepository.findByUserNameContainingOrFarmNameContaining(keyword, keyword, pageable);
+
+        return ApplicationListResDto.from(applicationPage);
+    }
 }

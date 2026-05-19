@@ -3,6 +3,7 @@ package com.example.demo.domain.admin.controller;
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.service.AdminService;
 import com.example.demo.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,5 +49,16 @@ public class AdminController {
     @GetMapping
     public ResponseEntity<ApiResponse<AdminListResDto>> getAdmins(){
         return ResponseEntity.ok(ApiResponse.success(adminService.getAdmins(USER_ID)));
+    }
+
+
+    // 관리자가 지원자의 목록을 조회하는 API
+    @GetMapping("/applications")
+    public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) String keyword
+    ){
+        return ResponseEntity.ok(ApiResponse.success(adminService.getApplications(page,size,keyword)));
     }
 }
