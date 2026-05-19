@@ -2,6 +2,8 @@ package com.example.demo.domain.user.entity;
 
 import com.example.demo.global.common.entity.BaseSoftDeleteEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,25 +24,30 @@ public class User extends BaseSoftDeleteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String naverId; // Todo 필드명 수정 예정
+    private String oauthId;
 
-    private String naverName; // Todo userName으로 수정 필요
+    private String userName;
 
-    // Todo email 필드 추가 필요
+    private String email;
+
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
     private Boolean applied;
 
-    private User(String naverId, String naverName, Boolean applied) {
-        this.naverId = naverId;
-        this.naverName = naverName;
+    private User(String oauthId, String userName, String email, Role role, Boolean applied) {
+        this.oauthId = oauthId;
+        this.userName = userName;
+        this.email = email;
+        this.role = role;
         this.applied = applied;
     }
 
     public void withdraw() {
         this.delete();
     }
-  
-    public static User create(String naverId, String naverName) {
-        return new User(naverId, naverName, false);
+
+    public static User createUser(String oauthId, String userName, String email) {
+        return new User(oauthId, userName, email, Role.ROLE_USER, false);
     }
 }
