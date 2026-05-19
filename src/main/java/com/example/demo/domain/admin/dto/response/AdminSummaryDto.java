@@ -1,0 +1,24 @@
+package com.example.demo.domain.admin.dto.response;
+
+import com.example.demo.domain.admin.entity.Admin;
+import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
+
+@Builder
+@Getter
+public class AdminSummaryDto {
+    private final Long adminId;
+    private final String adminLoginId;
+    private final String adminName;
+    private final LocalDateTime createdAt;
+
+    public static AdminSummaryDto from(Admin admin) {
+        return AdminSummaryDto.builder()
+                   .adminId(admin.getId())
+                   .adminLoginId(admin.getLoginId())
+                   .adminName(admin.getAdminName())
+                   .createdAt(admin.getCreatedAt())
+                   .build();
+    }
+}
