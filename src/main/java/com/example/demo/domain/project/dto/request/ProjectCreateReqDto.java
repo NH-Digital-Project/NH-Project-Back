@@ -19,7 +19,6 @@ public class ProjectCreateReqDto {
     @NotBlank(message = "품목은 필수입니다.")
     private final String productCategory;
 
-    @NotBlank(message = "썸네일 이미지 URL은 필수입니다.")
     private final String thumbnailImageUrl;
 
     @NotBlank(message = "소개글은 필수입니다.")
