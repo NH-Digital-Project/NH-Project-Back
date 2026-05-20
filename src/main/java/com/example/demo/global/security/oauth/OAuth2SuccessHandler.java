@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private static final String URI_STR = "http://13.124.217.214:3000/oauth2/redirect";
+    @Value("${app.frontend-url}")
+    private String frontendBaseUrl;
+
+    private static final String REDIRECT_PATH = "/oauth2/redirect";
     private static final String TOKEN = "token";
 
     private final JwtProvider jwtProvider;
@@ -34,7 +38,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // JWT 토큰 생성
         String accessToken = jwtProvider.createAccessToken(String.valueOf(userId), role);
 
-        String targetUrl = UriComponentsBuilder.fromUriString(URI_STR)
+        String targetUrl = UriComponentsBuilder.fromUriString(frontendBaseUrl + REDIRECT_PATH)
             .queryParam(TOKEN, accessToken)
             .build().toUriString();
 
