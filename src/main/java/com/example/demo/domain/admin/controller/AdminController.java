@@ -3,19 +3,28 @@ package com.example.demo.domain.admin.controller;
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.service.AdminService;
 import com.example.demo.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin")
@@ -28,7 +37,7 @@ public class AdminController {
     public ResponseEntity<ApiResponse<AdminCreateResDto>> createAdmin(
         //Todo: 사용자(관리자) 검증 필요
         @Valid @RequestBody AdminCreateReqDto createReqDto
-    ){
+    ) {
 
         return ResponseEntity.ok(ApiResponse.success(adminService.createAdmin(createReqDto)));
 
@@ -38,14 +47,25 @@ public class AdminController {
     @DeleteMapping("/{adminId}")
     public ResponseEntity<ApiResponse<String>> deleteAdmin(
         @PathVariable Long adminId
-    ){
-        adminService.deleteAdmin(USER_ID,adminId);
+    ) {
+        adminService.deleteAdmin(USER_ID, adminId);
         // 현재 ApiResponse에서 성공시 데이터만 넘기고 있는데 메시지를 data로 넘기는게 어색한데 ApiResponse에 메시지 필드를 추가하는건 어떤지?
         return ResponseEntity.ok(ApiResponse.successWithMessage("계정정보가 삭제되었습니다."));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<AdminListResDto>> getAdmins(){
+    public ResponseEntity<ApiResponse<AdminListResDto>> getAdmins() {
         return ResponseEntity.ok(ApiResponse.success(adminService.getAdmins(USER_ID)));
+    }
+
+
+    // 관리자가 지원자의 목록을 조회하는 API
+    @GetMapping("/applications")
+    public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
+        @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
+        @RequestParam(required = false) String keyword
+    ) {
+        return ResponseEntity.ok(
+            ApiResponse.success(adminService.getApplications(USER_ID, pageable, keyword)));
     }
 }
