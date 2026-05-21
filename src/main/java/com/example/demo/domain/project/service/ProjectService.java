@@ -3,6 +3,7 @@ package com.example.demo.domain.project.service;
 import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
 import com.example.demo.domain.project.dto.request.ProjectCreateReqDto;
+import com.example.demo.domain.project.dto.request.ProjectUpdateReqDto;
 import com.example.demo.domain.project.entity.Project;
 import com.example.demo.domain.project.repository.ProjectRepository;
 import com.example.demo.global.exception.CustomException;
@@ -42,5 +43,21 @@ public class ProjectService {
                 .build();
 
         projectRepository.save(project);
+    }
+
+    @Transactional
+    public void updateProject(Long projectId, ProjectUpdateReqDto request) {
+        // 수정할 선정업체 조회
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+
+        project.update(
+                request.getFarmName(),
+                request.getProductCategory(),
+                request.getThumbnailImageUrl(),
+                request.getDescription(),
+                request.getStatus(),
+                request.getHappyBeanUrl()
+        );
     }
 }

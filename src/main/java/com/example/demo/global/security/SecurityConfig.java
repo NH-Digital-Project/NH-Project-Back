@@ -5,6 +5,7 @@ import com.example.demo.global.security.oauth.CustomOAuth2UserService;
 import com.example.demo.global.security.oauth.OAuth2SuccessHandler;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +24,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String URI_STR = "http://13.124.217.214:3000";
+    @Value("${app.frontend-url}")
+    private String frontendUrl;
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
@@ -55,7 +57,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // 허용할 출처(Origin) 설정
-        configuration.setAllowedOrigins(List.of(URI_STR));
+        configuration.setAllowedOrigins(List.of(frontendUrl));
 
         // 허용할 HTTP 메서드 설정
         configuration.setAllowedMethods(

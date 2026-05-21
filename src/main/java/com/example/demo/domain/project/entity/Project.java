@@ -57,5 +57,20 @@ public class Project extends BaseEntity {
         this.projectStatus = projectStatus;
         this.happyBeanUrl = happyBeanUrl;
     }
+
+    public void update(String farmName, String productCategory,
+                                  String thumbnailImageUrl, String description,
+                                  ProjectStatus projectStatus, String happyBeanUrl) {
+        if (farmName != null) this.farmName = farmName;
+        if (productCategory != null) this.productCategory = productCategory;
+        if (thumbnailImageUrl != null) {
+            // isBlank()는 문자열이 비어있거나 공백만 있을 때 true를 반환
+            // 비어있다면 null로 저장하고, 값이 있다면 그 값을 저장하도록 작성
+            this.thumbnailImageUrl = thumbnailImageUrl.isBlank() ? null : thumbnailImageUrl;
+        }
+        if (description != null) this.description = description;
+        if (projectStatus != null) this.projectStatus = projectStatus;
+        if (happyBeanUrl != null) this.happyBeanUrl = happyBeanUrl;
+    }
 }
 

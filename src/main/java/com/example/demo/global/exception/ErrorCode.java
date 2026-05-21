@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    // 공통
+    INVALID_PAGE(HttpStatus.BAD_REQUEST, "유효하지 않은 페이지 번호입니다."),
+
     // Auth
 
     // User
@@ -34,7 +37,8 @@ public enum ErrorCode {
     INVALID_APPLICATION_STATUS(HttpStatus.BAD_REQUEST, "SUBMITTED 상태의 지원서만 등록할 수 있습니다."),
 
     // Project
-    PROJECT_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 선정업체로 등록된 지원서입니다.");
+    PROJECT_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 선정업체로 등록된 지원서입니다."),
+    PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "선정업체를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
