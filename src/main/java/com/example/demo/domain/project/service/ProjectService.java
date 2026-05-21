@@ -84,10 +84,4 @@ public class ProjectService {
         return new ProjectListResDto(projectDtos);
     }
 
-    private int getStatusPriority(ProjectStatus status) {
-        if(status == ProjectStatus.IN_PROGRESS) return 1;
-        if(status == ProjectStatus.BEFORE_PROGRESS) return 2;
-        if(status == ProjectStatus.COMPLETED) return 3;
-        return 4;
-    }
 }
