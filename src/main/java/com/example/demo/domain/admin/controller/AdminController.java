@@ -4,13 +4,12 @@ import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
+import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.service.AdminService;
 import com.example.demo.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +58,7 @@ public class AdminController {
     }
 
 
-    // 관리자가 지원자의 목록을 조회하는 API
+    // 관리자가 지원자(지원서)의 목록을 조회하는 API
     @GetMapping("/applications")
     public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
         @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
@@ -67,5 +66,15 @@ public class AdminController {
     ) {
         return ResponseEntity.ok(
             ApiResponse.success(adminService.getApplications(USER_ID, pageable, keyword)));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<ApiResponse<UserListResDto>> getUsers(
+        @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
+        @RequestParam(required = false) String keyword
+    ){
+        return ResponseEntity.ok(
+            ApiResponse.success(adminService.getUsers(USER_ID , pageable, keyword))
+        );
     }
 }

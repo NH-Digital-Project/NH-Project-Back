@@ -4,10 +4,13 @@ import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
+import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
 import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
+import com.example.demo.domain.user.entity.User;
+import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import java.util.List;
@@ -26,6 +29,7 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
     private final ApplicationRepository applicationRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
@@ -107,4 +111,28 @@ public class AdminService {
         return applicationRepository.findByUserNameContainingOrFarmNameContaining(keyword, keyword, pageable);
     }
 
+    public UserListResDto getUsers(Long userId, Pageable pageable, String keyword) {
+        validateAdminId(userId);
+
+        Page<User> userPage = findUsers(keyword, pageable);
+
+        if (userPage.getTotalElements() == 0) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        if (pageable.getPageNumber() >= userPage.getTotalPages()) {
+            pageable = PageRequest.of(userPage.getTotalPages() - 1, pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "createdAt"));
+            userPage = findUsers(keyword, pageable);
+        }
+
+        return UserListResDto.from(userPage);
+    }
+    private Page<User> findUsers(String keyword , Pageable pageable){
+        if(keyword == null || keyword.isBlank()){
+            return userRepository.findAll(pageable);
+        }
+
+        return userRepository.findByUserNameContainingOrEmailContaining(keyword, keyword, pageable);
+    }
 }
