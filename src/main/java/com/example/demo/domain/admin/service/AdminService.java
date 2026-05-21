@@ -3,12 +3,19 @@ package com.example.demo.domain.admin.service;
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
+import com.example.demo.domain.application.entity.Application;
+import com.example.demo.domain.application.repository.ApplicationRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminService {
 
     private final AdminRepository adminRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Transactional
     public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
@@ -46,29 +54,57 @@ public class AdminService {
 
         validateAdminId(requestAdminId);
 
-        List<Admin> admins  = adminRepository.findAll();
+        List<Admin> admins = adminRepository.findAll();
 
         return AdminListResDto.from(admins);
     }
 
-    private void validateDuplicateLoginId(String targetAdminLoginId){
-        if(adminRepository.existsByLoginId(targetAdminLoginId)){
+    private void validateDuplicateLoginId(String targetAdminLoginId) {
+        if (adminRepository.existsByLoginId(targetAdminLoginId)) {
             throw new CustomException(ErrorCode.DUPLICATED_LOGIN_ID);
         }
     }
 
-    private Admin findAdminById(Long targetAdminId){
+    private Admin findAdminById(Long targetAdminId) {
         return adminRepository.findById(targetAdminId).orElseThrow(
             () -> new CustomException(ErrorCode.ADMIN_NOT_FOUND)
         );
     }
 
     private void validateAdminId(Long requestAdminId) {
-      adminRepository.findById(requestAdminId).orElseThrow(
-          ()-> new CustomException(ErrorCode.ADMIN_UNAUTHORIZED)
-      );
+        adminRepository.findById(requestAdminId).orElseThrow(
+            () -> new CustomException(ErrorCode.ADMIN_UNAUTHORIZED)
+        );
     }
 
 
+    public ApplicationListResDto getApplications(Long userId , Pageable pageable, String keyword) {
+
+        validateAdminId(userId);
+
+
+        Page<Application> applicationPage = findApplications(keyword, pageable);
+
+        if(applicationPage.getTotalElements() == 0){
+            throw new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
+        }
+
+        if(pageable.getPageNumber() >= applicationPage.getTotalPages()){
+            pageable = PageRequest.of(applicationPage.getTotalPages()-1, pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "createdAt"));
+            applicationPage = findApplications(keyword, pageable);
+        }
+
+
+
+
+        return ApplicationListResDto.from(applicationPage);
+    }
+    private Page<Application> findApplications(String keyword, Pageable pageable) {
+        if (keyword == null || keyword.isBlank()) {
+            return applicationRepository.findAll(pageable);
+        }
+        return applicationRepository.findByUserNameContainingOrFarmNameContaining(keyword, keyword, pageable);
+    }
 
 }

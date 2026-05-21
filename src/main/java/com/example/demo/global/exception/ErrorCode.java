@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    // 공통
+    INVALID_PAGE(HttpStatus.BAD_REQUEST, "유효하지 않은 페이지 번호입니다."),
+
     // Auth
 
     // User
