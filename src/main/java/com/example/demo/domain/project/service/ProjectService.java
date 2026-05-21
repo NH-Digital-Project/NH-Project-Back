@@ -4,13 +4,20 @@ import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
 import com.example.demo.domain.project.dto.request.ProjectCreateReqDto;
 import com.example.demo.domain.project.dto.request.ProjectUpdateReqDto;
+import com.example.demo.domain.project.dto.response.ProjectListResDto;
+import com.example.demo.domain.project.dto.response.ProjectResDto;
 import com.example.demo.domain.project.entity.Project;
+import com.example.demo.domain.project.entity.ProjectStatus;
 import com.example.demo.domain.project.repository.ProjectRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +66,28 @@ public class ProjectService {
                 request.getStatus(),
                 request.getHappyBeanUrl()
         );
+    }
+
+    public ProjectListResDto getProjects(ProjectStatus status) {
+        List<Project> projects;
+
+        if(status != null) { // 해당 status만 최신순으로 조회
+            projects = projectRepository.findByProjectStatusOrderByCreatedAtDesc(status);
+        } else { // 전체 조회
+            projects = projectRepository.findAllWithCustomOrder();
+        }
+
+        List<ProjectResDto> projectDtos = projects.stream()
+                .map(ProjectResDto::from)
+                .toList();
+
+        return new ProjectListResDto(projectDtos);
+    }
+
+    private int getStatusPriority(ProjectStatus status) {
+        if(status == ProjectStatus.IN_PROGRESS) return 1;
+        if(status == ProjectStatus.BEFORE_PROGRESS) return 2;
+        if(status == ProjectStatus.COMPLETED) return 3;
+        return 4;
     }
 }
