@@ -73,12 +73,8 @@ public class ProjectService {
 
         if(status != null) { // 해당 status만 최신순으로 조회
             projects = projectRepository.findByProjectStatusOrderByCreatedAtDesc(status);
-        } else { // 전체 최신순으로 조회
-            // 최신순으로 조회
-            List<Project> projectList = projectRepository.findAllByOrderByCreatedAtDesc();
-            // IN_PROGRESS -> BEFORE_PROGRESS -> COMPLETED 순서로 정렬
-            projects = new ArrayList<>(projectList);
-            projects.sort(Comparator.comparing(p -> getStatusPriority(p.getProjectStatus())));
+        } else { // 전체 조회
+            projects = projectRepository.findAllWithCustomOrder();
         }
 
         List<ProjectResDto> projectDtos = projects.stream()
