@@ -89,13 +89,17 @@ public class AdminService {
 
         Page<Application> applicationPage = findApplications(keyword, pageable);
 
+        if(applicationPage.getTotalElements() == 0){
+            throw new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
+        }
+
         if(page > applicationPage.getTotalPages()){
             pageable = PageRequest.of(applicationPage.getTotalPages()-1, size,
                 Sort.by(Sort.Direction.DESC, "createdAt"));
             applicationPage = findApplications(keyword, pageable);
         }
 
-        checkValidatePage(page,applicationPage);
+
 
 
         return ApplicationListResDto.from(applicationPage);
@@ -107,10 +111,4 @@ public class AdminService {
         return applicationRepository.findByUserNameContainingOrFarmNameContaining(keyword, keyword, pageable);
     }
 
-    private void checkValidatePage (Integer page, Page<Application> applicationPage ){
-        if(applicationPage.getTotalElements() == 0){
-            throw new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
-        }
-
-    }
 }
