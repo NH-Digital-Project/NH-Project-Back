@@ -90,7 +90,9 @@ public class ProjectService {
                 .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
 
         // 선정업체와 연결된 지원서 상태 변경
-        project.getApplication().submit();
+        if(project.getApplication() != null) {
+            project.getApplication().submit();
+        }
 
         projectRepository.delete(project);
     }
