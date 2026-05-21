@@ -40,6 +40,7 @@ public class SecurityConfig {
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/oauth2/**", "/login/oauth2/code/**", "/api/v1/projects/**").permitAll()
+                .requestMatchers("/api/v1/admin/**").permitAll() // Todo: 관리자 로그인 구현 후 제거
                 .requestMatchers("/api/v1/applications/**", "/api/v1/me/**").authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
