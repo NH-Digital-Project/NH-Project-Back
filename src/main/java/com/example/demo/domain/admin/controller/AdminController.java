@@ -9,6 +9,10 @@ import com.example.demo.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,11 +62,10 @@ public class AdminController {
     // 관리자가 지원자의 목록을 조회하는 API
     @GetMapping("/applications")
     public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
-        @RequestParam(defaultValue = "1")@Min(1) Integer page,
-        @RequestParam(defaultValue = "10")@Min(1) Integer size,
+        @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
         @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(
-            ApiResponse.success(adminService.getApplications(USER_ID, page, size, keyword)));
+            ApiResponse.success(adminService.getApplications(USER_ID, pageable, keyword)));
     }
 }

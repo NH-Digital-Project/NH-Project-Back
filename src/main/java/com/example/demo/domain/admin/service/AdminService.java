@@ -78,13 +78,9 @@ public class AdminService {
     }
 
 
-    public ApplicationListResDto getApplications(Long userId , Integer page, Integer size, String keyword) {
+    public ApplicationListResDto getApplications(Long userId , Pageable pageable, String keyword) {
 
         validateAdminId(userId);
-
-        Pageable pageable = PageRequest.of(page-1, size,
-            Sort.by(Sort.Direction.DESC, "createdAt"));
-
 
 
         Page<Application> applicationPage = findApplications(keyword, pageable);
@@ -93,8 +89,8 @@ public class AdminService {
             throw new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
         }
 
-        if(page > applicationPage.getTotalPages()){
-            pageable = PageRequest.of(applicationPage.getTotalPages()-1, size,
+        if(pageable.getPageNumber() >= applicationPage.getTotalPages()){
+            pageable = PageRequest.of(applicationPage.getTotalPages()-1, pageable.getPageSize(),
                 Sort.by(Sort.Direction.DESC, "createdAt"));
             applicationPage = findApplications(keyword, pageable);
         }
