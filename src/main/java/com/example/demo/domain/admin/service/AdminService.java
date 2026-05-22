@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +27,14 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
     private final ApplicationRepository applicationRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
         validateDuplicateLoginId(createReqDto.getAdminLoginId());
 
-        // Todo 우선 평문 저장 Security 도입 후 비밀번호 암호화 저장
-
-        Admin admin = adminRepository.save(createReqDto.toEntity());
+        Admin admin = adminRepository.save(createReqDto.toEntity(passwordEncoder.encode(
+            createReqDto.getPassword())));
 
         return AdminCreateResDto.from(admin);
 
