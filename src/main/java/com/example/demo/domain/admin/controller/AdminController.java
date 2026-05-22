@@ -1,16 +1,16 @@
 package com.example.demo.domain.admin.controller;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
+import com.example.demo.domain.admin.dto.request.AdminLoginReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.AdminLoginResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.service.AdminService;
 import com.example.demo.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -62,10 +62,16 @@ public class AdminController {
     // 관리자가 지원자의 목록을 조회하는 API
     @GetMapping("/applications")
     public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
-        @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
+        @PageableDefault(size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
         @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(
             ApiResponse.success(adminService.getApplications(USER_ID, pageable, keyword)));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<AdminLoginResDto>> adminLogin(
+        @Valid @RequestBody AdminLoginReqDto reqDto) {
+        return ResponseEntity.ok(ApiResponse.success(adminService.adminLogin(reqDto)));
     }
 }

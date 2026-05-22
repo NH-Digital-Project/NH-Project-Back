@@ -1,8 +1,10 @@
 package com.example.demo.domain.admin.service;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
+import com.example.demo.domain.admin.dto.request.AdminLoginReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.AdminLoginResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
@@ -10,6 +12,7 @@ import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
+import com.example.demo.global.security.jwt.JwtProvider;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +31,7 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final ApplicationRepository applicationRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
@@ -59,6 +63,22 @@ public class AdminService {
 
         return AdminListResDto.from(admins);
     }
+
+    public AdminLoginResDto adminLogin(AdminLoginReqDto reqDto) {
+        Admin admin = adminRepository.findByLoginId(reqDto.adminLoginId())
+            .orElseThrow(() -> new CustomException(ErrorCode.ADMIN_NOT_FOUND));
+
+        if (!passwordEncoder.matches(reqDto.password(), admin.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        String accessToken = jwtProvider.createAccessToken(
+            String.valueOf(admin.getId()), admin.getRole().name()
+        );
+
+        return new AdminLoginResDto(accessToken);
+    }
+
 
     private void validateDuplicateLoginId(String targetAdminLoginId) {
         if (adminRepository.existsByLoginId(targetAdminLoginId)) {
