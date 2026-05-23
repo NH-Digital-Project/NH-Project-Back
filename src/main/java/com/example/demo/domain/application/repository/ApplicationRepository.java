@@ -19,4 +19,10 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     Page<Application> findByUserNameContainingOrFarmNameContaining(String userName, String farmName,
         Pageable pageable);
+
+    // 유저의 유효한(삭제되지 않은) 지원서 존재 여부 확인으로 변경
+    boolean existsByUserIdAndDeletedAtIsNull(Long userId);
+
+    // 유저의 유효한(삭제되지 않은) 지원서 조회로 변경
+    Optional<Application> findByUserIdAndDeletedAtIsNull(Long userId);
 }
