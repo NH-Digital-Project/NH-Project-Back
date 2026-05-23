@@ -44,10 +44,12 @@ public class Project extends BaseEntity {
 
     private String happyBeanUrl;
 
+    private Integer sortOrder; // 순서 저장 필드 추가
+
     @Builder
     private Project(Long id, Application application, String farmName, String productCategory,
         String thumbnailImageUrl, String description, ProjectStatus projectStatus,
-        String happyBeanUrl) {
+        String happyBeanUrl, Integer sortOrder) {
         this.id = id;
         this.application = application;
         this.farmName = farmName;
@@ -56,6 +58,7 @@ public class Project extends BaseEntity {
         this.description = description;
         this.projectStatus = projectStatus;
         this.happyBeanUrl = happyBeanUrl;
+        this.sortOrder = sortOrder != null ? sortOrder : 0; // 기본값 0
     }
 
     public void update(String farmName, String productCategory,
@@ -71,6 +74,11 @@ public class Project extends BaseEntity {
         if (description != null) this.description = description;
         if (projectStatus != null) this.projectStatus = projectStatus;
         if (happyBeanUrl != null) this.happyBeanUrl = happyBeanUrl;
+    }
+
+    // 순서 변경 메서드
+    public void updateSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }
 
