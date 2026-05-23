@@ -89,8 +89,8 @@ public class AdminService {
 
         Page<Application> applicationPage = findApplications(keyword, pageable);
 
-        if(applicationPage.getTotalElements() == 0){
-            throw new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
+        if (applicationPage.getTotalElements() == 0) {
+            return ApplicationListResDto.from(applicationPage);
         }
 
         if(pageable.getPageNumber() >= applicationPage.getTotalPages()){
@@ -117,7 +117,7 @@ public class AdminService {
         Page<User> userPage = findUsers(keyword, pageable);
 
         if (userPage.getTotalElements() == 0) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            return UserListResDto.from(userPage);
         }
 
         if (pageable.getPageNumber() >= userPage.getTotalPages()) {
