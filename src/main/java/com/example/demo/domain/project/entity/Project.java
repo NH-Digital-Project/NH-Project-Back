@@ -73,7 +73,9 @@ public class Project extends BaseEntity {
         }
         if (description != null) this.description = description;
         if (projectStatus != null) this.projectStatus = projectStatus;
-        if (happyBeanUrl != null) this.happyBeanUrl = happyBeanUrl;
+        if (happyBeanUrl != null) {
+            this.happyBeanUrl = happyBeanUrl.isBlank() ? null : happyBeanUrl;
+        }
     }
 
     // 순서 변경 메서드
