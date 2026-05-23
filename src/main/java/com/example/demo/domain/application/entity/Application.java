@@ -10,13 +10,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLRestriction;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "applications")
 @Entity
-@SQLRestriction("deleted_at IS NULL")
 public class Application extends BaseSoftDeleteEntity {
 
     @Id
@@ -29,10 +30,11 @@ public class Application extends BaseSoftDeleteEntity {
 
     private String userName;
 
-    private String birthDate;
+    private LocalDate birthDate;
 
     private String phoneNumber;
 
+    @Column(unique = true) // 지원서 번호에 제약 조건 추가하여 동일 번호 생성 방지
     private String applicationNumber;
 
     private String farmName;
@@ -46,21 +48,21 @@ public class Application extends BaseSoftDeleteEntity {
 
     private String mainProduct;
 
-    private Integer annualSales;
+    private BigDecimal annualSales;
 
     private Boolean onlineDistributionExperience;
 
     private String productCategory;
 
-    private String shippingDate;
+    private LocalDate shippingDate;
 
-    private String fundingDesiredDate;
+    private LocalDate fundingDesiredDate;
 
     private String productName;
 
     private String productSize;
 
-    private Integer sellingPrice;
+    private BigDecimal sellingPrice;
 
     private Integer availableQuantity;
 
@@ -71,11 +73,11 @@ public class Application extends BaseSoftDeleteEntity {
     private ApplicationStatus status;
 
     @Builder
-    private Application(Long id, User user, String userName, String birthDate, String phoneNumber,
+    private Application(Long id, User user, String userName, LocalDate birthDate, String phoneNumber,
         String applicationNumber, String farmName, String affiliatedNhName, Address farmAddress,
-        String businessRegistrationNumber, String mainProduct, Integer annualSales,
-        Boolean onlineDistributionExperience, String productCategory, String shippingDate,
-        String fundingDesiredDate, String productName, String productSize, Integer sellingPrice,
+        String businessRegistrationNumber, String mainProduct, BigDecimal annualSales,
+        Boolean onlineDistributionExperience, String productCategory, LocalDate shippingDate,
+        LocalDate fundingDesiredDate, String productName, String productSize, BigDecimal sellingPrice,
         Integer availableQuantity, String fundingPlan, ApplicationStatus status) {
         this.id = id;
         this.user = user;
