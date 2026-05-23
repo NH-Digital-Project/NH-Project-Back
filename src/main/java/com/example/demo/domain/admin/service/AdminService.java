@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,9 +92,9 @@ public class AdminService {
             return ApplicationListResDto.from(applicationPage);
         }
 
-        if(pageable.getPageNumber() >= applicationPage.getTotalPages()){
-            pageable = PageRequest.of(applicationPage.getTotalPages()-1, pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "createdAt"));
+        if (pageable.getPageNumber() >= applicationPage.getTotalPages()) {
+            pageable = PageRequest.of(applicationPage.getTotalPages() - 1, pageable.getPageSize(),
+                pageable.getSort());
             applicationPage = findApplications(keyword, pageable);
         }
 
@@ -122,7 +121,7 @@ public class AdminService {
 
         if (pageable.getPageNumber() >= userPage.getTotalPages()) {
             pageable = PageRequest.of(userPage.getTotalPages() - 1, pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "createdAt"));
+                pageable.getSort());
             userPage = findUsers(keyword, pageable);
         }
 
