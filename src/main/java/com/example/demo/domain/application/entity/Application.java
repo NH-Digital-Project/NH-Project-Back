@@ -118,5 +118,10 @@ public class Application extends BaseSoftDeleteEntity {
         }
         this.status = ApplicationStatus.APPROVED;
     }
+
+    // 선정업체 삭제 시 상태를 SUBMITTED로 변경
+    public void submit() {
+        this.status = ApplicationStatus.SUBMITTED;
+    }
 }
 

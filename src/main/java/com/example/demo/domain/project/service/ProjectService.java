@@ -84,10 +84,16 @@ public class ProjectService {
         return new ProjectListResDto(projectDtos);
     }
 
-    private int getStatusPriority(ProjectStatus status) {
-        if(status == ProjectStatus.IN_PROGRESS) return 1;
-        if(status == ProjectStatus.BEFORE_PROGRESS) return 2;
-        if(status == ProjectStatus.COMPLETED) return 3;
-        return 4;
+    @Transactional
+    public void deleteProject(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+
+        // 선정업체와 연결된 지원서 상태 변경
+        if(project.getApplication() != null) {
+            project.getApplication().submit();
+        }
+
+        projectRepository.delete(project);
     }
 }
