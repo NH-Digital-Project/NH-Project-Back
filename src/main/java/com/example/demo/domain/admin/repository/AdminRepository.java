@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     boolean existsByLoginId(String loginId);
 
-    Optional<Admin> findByLoginId(String id);
+    Optional<Admin> findByLoginId(String loginId);
 }
