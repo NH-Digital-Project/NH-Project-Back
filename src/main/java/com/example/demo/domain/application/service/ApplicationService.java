@@ -100,7 +100,7 @@ public class ApplicationService {
 
     // 생년월일 검증
     private void validateBirthDate(LocalDate birthDate) {
-        if (birthDate.isAfter(LocalDate.now())) {
+        if (birthDate.isAfter(LocalDate.now(java.time.ZoneId.of("Asia/Seoul")))) {
             throw new CustomException(ErrorCode.INVALID_BIRTH_DATE);
         }
     }
