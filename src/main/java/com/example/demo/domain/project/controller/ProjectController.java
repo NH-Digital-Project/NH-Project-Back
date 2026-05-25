@@ -43,4 +43,12 @@ public class ProjectController {
         ProjectListResDto response = projectService.getProjects(status);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<ApiResponse<String>> deleteProject(
+            @PathVariable Long projectId
+    ) {
+        projectService.deleteProject(projectId);
+        return ResponseEntity.ok(ApiResponse.successWithMessage("선정업체가 삭제되었습니다."));
+    }
 }
