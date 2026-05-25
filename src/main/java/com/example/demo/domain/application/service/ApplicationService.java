@@ -40,7 +40,6 @@ public class ApplicationService {
 
         // 사업 신청 기간 및 생년월일 검증
         validateApplicationPeriod();
-        validateBirthDate(request.getBirthDate());
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -95,13 +94,6 @@ public class ApplicationService {
         LocalDateTime now = LocalDateTime.now();
         if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME)) {
             throw new CustomException(ErrorCode.INVALID_APPLICATION_PERIOD);
-        }
-    }
-
-    // 생년월일 검증
-    private void validateBirthDate(LocalDate birthDate) {
-        if (birthDate.isAfter(LocalDate.now(java.time.ZoneId.of("Asia/Seoul")))) {
-            throw new CustomException(ErrorCode.INVALID_BIRTH_DATE);
         }
     }
 
