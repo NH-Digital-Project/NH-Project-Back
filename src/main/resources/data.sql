@@ -13,7 +13,8 @@ INSERT IGNORE INTO users (id, oauth_id, user_name, email, role, applied, created
 (9, 'naver_user_009', '강동원', 'dongwon@example.com', 'ROLE_USER', false, NOW(), NOW()),
 (10, 'naver_user_010', '유재석', 'jaeseok@example.com', 'ROLE_USER', false, NOW(), NOW());
 
-
+INSERT IGNORE INTO admins(id, login_id, admin_name, password, role, created_at, updated_at) VALUES
+(1, 'test', '최유림', '$2b$12$SYwFjnQ9RoY6SCPEFnbFMeJmFB1oRN3BLc/qJcU8P1Oz5qyfIUffS', 'ROLE_ADMIN', NOW(), NOW());
 -- ====================================================================
 -- 2. 지원서(Application) 데이터 10개 삽입 (동일)
 -- ====================================================================

@@ -1,8 +1,10 @@
 package com.example.demo.domain.admin.controller;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
+import com.example.demo.domain.admin.dto.request.AdminLoginReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.AdminLoginResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.service.AdminService;
@@ -61,13 +63,19 @@ public class AdminController {
     // 관리자가 지원자(지원서)의 목록을 조회하는 API
     @GetMapping("/applications")
     public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
-        @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
+        @PageableDefault(size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
         @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(
             ApiResponse.success(adminService.getApplications(USER_ID, pageable, keyword)));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<AdminLoginResDto>> adminLogin(
+        @Valid @RequestBody AdminLoginReqDto reqDto) {
+        return ResponseEntity.ok(ApiResponse.success(adminService.adminLogin(reqDto)));
+    }
+  
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<UserListResDto>> getUsers(
         @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
