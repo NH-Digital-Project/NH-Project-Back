@@ -80,23 +80,26 @@ public class Application extends BaseSoftDeleteEntity {
 
     @Builder
     private Application(Long id, User user, String userName, String birthDate, String phoneNumber,
-        String applicationNumber, String farmName, Address farmAddress,
-        String businessRegistrationNumber, String mainProduct, Integer annualSales,
-        Boolean onlineDistributionExperience, String productCategory, String shippingDate,
+        String gender, String applicationNumber, String farmName, Address farmAddress,
+        String businessRegistrationNumber, String agriRegistrationNumber, String mainProduct, Integer annualSales,
+        Boolean onlineDistributionExperience, Boolean fundingExperience, String productCategory, String shippingDate,
         String fundingDesiredDate, String productName, String productSize, Integer sellingPrice,
-        Integer availableQuantity, String fundingPlan, ApplicationStatus status) {
+        Integer availableQuantity, String motivation, String fundingPlan, ApplicationStatus status) {
         this.id = id;
         this.user = user;
         this.userName = userName;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
+        this.gender = gender;
         this.applicationNumber = applicationNumber;
         this.farmName = farmName;
         this.farmAddress = farmAddress;
         this.businessRegistrationNumber = businessRegistrationNumber;
+        this.agriRegistrationNumber = agriRegistrationNumber;
         this.mainProduct = mainProduct;
         this.annualSales = annualSales;
         this.onlineDistributionExperience = onlineDistributionExperience;
+        this.fundingExperience = fundingExperience;
         this.productCategory = productCategory;
         this.shippingDate = shippingDate;
         this.fundingDesiredDate = fundingDesiredDate;
@@ -104,13 +107,14 @@ public class Application extends BaseSoftDeleteEntity {
         this.productSize = productSize;
         this.sellingPrice = sellingPrice;
         this.availableQuantity = availableQuantity;
+        this.motivation = motivation;
         this.fundingPlan = fundingPlan;
         this.status = status != null ? status : ApplicationStatus.SUBMITTED;
     }
 
     public void cancel() {
         // ApplicationStatus가 SUBMITTED일때만 취소 가능
-        if(this.status != ApplicationStatus.SUBMITTED) {
+        if (this.status != ApplicationStatus.SUBMITTED) {
             throw new CustomException(ErrorCode.APPLICATION_NOT_DELETABLE);
         }
 
