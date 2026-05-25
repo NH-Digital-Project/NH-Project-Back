@@ -49,6 +49,9 @@ jwt:
 
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  application:
+    start-time: "2026-05-01T00:00:00"
+    end-time: "2026-12-31T23:59:59"
 
 
 
