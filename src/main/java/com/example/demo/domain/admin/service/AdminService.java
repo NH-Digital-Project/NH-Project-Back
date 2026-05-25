@@ -39,7 +39,9 @@ public class AdminService {
 
 
     @Transactional
-    public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
+    public AdminCreateResDto createAdmin(Long adminId ,AdminCreateReqDto createReqDto) {
+        validateAdminId(adminId);
+
         validateDuplicateLoginId(createReqDto.getAdminLoginId());
 
         Admin admin = adminRepository.save(createReqDto.toEntity(passwordEncoder.encode(
