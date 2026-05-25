@@ -22,8 +22,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +30,13 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
+    private static final ZoneId KST_ZONE = ZoneId.of("Asia/Seoul");
 
     @Value("${app.application.start-time}")
-    private String startTimeStr;
+    private LocalDateTime startTime;
 
     @Value("${app.application.end-time}")
-    private String endTimeStr;
+    private LocalDateTime endTime;
 
     @Transactional
     public CreateApplicationResDto createApplication(Long userId, ApplicationReqDto request) {
@@ -95,9 +94,7 @@ public class ApplicationService {
 
     // 사업 신청 기간 검증
     private void validateApplicationPeriod() {
-        LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
-        LocalDateTime endTime = LocalDateTime.parse(endTimeStr);
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now(KST_ZONE);
 
         if(now.isBefore(startTime) || now.isAfter(endTime)) {
             throw new CustomException(ErrorCode.INVALID_APPLICATION_PERIOD);
@@ -154,9 +151,7 @@ public class ApplicationService {
     }
 
     private void validateCancelPeriod() {
-        LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
-        LocalDateTime endTime = LocalDateTime.parse(endTimeStr);
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now(KST_ZONE);
 
         // 신청 기간 내 + 마감 1시간 전까지 취소 가능
         if(now.isBefore(startTime) || now.isAfter(endTime.minusHours(1))) {
