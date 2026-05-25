@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -101,9 +103,18 @@ public class ProjectService {
     // 드래그 앤 드롭 다중 순서 업데이트 로직
     @Transactional
     public void updateProjectOrders(List<ProjectOrderUpdateReqDto> orderRequests) {
+        List<Long> projectIds = orderRequests.stream()
+                .map(ProjectOrderUpdateReqDto::getProjectId)
+                .toList();
+
+        Map<Long, Project> projectMap = projectRepository.findAllById(projectIds).stream()
+                .collect(Collectors.toMap(Project::getId, project -> project));
+
         for (ProjectOrderUpdateReqDto request : orderRequests) {
-            Project project = projectRepository.findById(request.getProjectId())
-                    .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+            Project project = projectMap.get(request.getProjectId());
+            if (project == null) {
+                throw new CustomException(ErrorCode.PROJECT_NOT_FOUND);
+            }
             project.updateSortOrder(request.getSortOrder());
         }
     }
