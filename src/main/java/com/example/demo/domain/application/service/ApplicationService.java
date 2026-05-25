@@ -13,12 +13,14 @@ import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
@@ -31,9 +33,11 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
 
-    // 임의로 사업 신청 시간 설정
-    private static final LocalDateTime APPLICATION_START_TIME = LocalDateTime.of(2026, 5, 1, 0, 0);
-    private static final LocalDateTime APPLICATION_END_TIME = LocalDateTime.of(2026,12,31,23,59);
+    @Value("${app.application.start-time}")
+    private String startTimeStr;
+
+    @Value("${app.application.end-time}")
+    private String endTimeStr;
 
     @Transactional
     public CreateApplicationResDto createApplication(Long userId, ApplicationReqDto request) {
@@ -91,8 +95,11 @@ public class ApplicationService {
 
     // 사업 신청 기간 검증
     private void validateApplicationPeriod() {
-        LocalDateTime now = LocalDateTime.now();
-        if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME)) {
+        LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
+        LocalDateTime endTime = LocalDateTime.parse(endTimeStr);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        if(now.isBefore(startTime) || now.isAfter(endTime)) {
             throw new CustomException(ErrorCode.INVALID_APPLICATION_PERIOD);
         }
     }
@@ -147,10 +154,12 @@ public class ApplicationService {
     }
 
     private void validateCancelPeriod() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
+        LocalDateTime endTime = LocalDateTime.parse(endTimeStr);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
         // 신청 기간 내 + 마감 1시간 전까지 취소 가능
-        if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME.minusHours(1))) {
+        if(now.isBefore(startTime) || now.isAfter(endTime.minusHours(1))) {
             throw new CustomException(ErrorCode.INVALID_CANCEL_PERIOD);
         }
     }
