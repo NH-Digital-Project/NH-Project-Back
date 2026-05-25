@@ -43,6 +43,7 @@ public class ApplicationReqDto {
     private final String mainProduct;
 
     @NotNull(message = "연매출액은 필수입니다.")
+    @Min(value = 0, message = "연매출액은 0 이상이어야 합니다.")
     private final BigDecimal annualSales;
 
     @NotNull(message = "온라인 유통경험 여부는 필수입니다.")
@@ -66,9 +67,11 @@ public class ApplicationReqDto {
     private final String productSize;
 
     @NotNull(message = "판매 가격은 필수입니다.")
+    @Min(value = 0, message = "판매 가격은 0 이상이어야 합니다.")
     private final BigDecimal sellingPrice;
 
     @NotNull(message = "판매 가능 수량은 필수입니다.")
+    @Min(value = 1, message = "판매 가능 수량은 1개 이상이어야 합니다.")
     private final Integer availableQuantity;
 
     @NotBlank(message = "펀딩 계획은 필수입니다.")
