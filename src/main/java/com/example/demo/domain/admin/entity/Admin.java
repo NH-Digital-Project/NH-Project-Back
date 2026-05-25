@@ -2,6 +2,8 @@ package com.example.demo.domain.admin.entity;
 
 import com.example.demo.global.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,12 +29,16 @@ public class Admin extends BaseEntity {
 
     private String password;
 
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
+
     @Builder
     private Admin(Long id, String loginId, String password , String adminName) {
         this.id = id;
         this.loginId = loginId;
         this.password = password;
         this.adminName = adminName;
+        this.role = Role.ROLE_ADMIN;
     }
 }
 

@@ -1,21 +1,28 @@
 package com.example.demo.domain.admin.service;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
+import com.example.demo.domain.admin.dto.request.AdminLoginReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.AdminLoginResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
+import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
 import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
+import com.example.demo.domain.user.entity.User;
+import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
+import com.example.demo.global.security.jwt.JwtProvider;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +33,17 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
     private final ApplicationRepository applicationRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+    private final UserRepository userRepository;
+
 
     @Transactional
     public AdminCreateResDto createAdmin(AdminCreateReqDto createReqDto) {
         validateDuplicateLoginId(createReqDto.getAdminLoginId());
 
-        // Todo 우선 평문 저장 Security 도입 후 비밀번호 암호화 저장
-
-        Admin admin = adminRepository.save(createReqDto.toEntity());
+        Admin admin = adminRepository.save(createReqDto.toEntity(passwordEncoder.encode(
+            createReqDto.getPassword())));
 
         return AdminCreateResDto.from(admin);
 
@@ -58,6 +68,22 @@ public class AdminService {
 
         return AdminListResDto.from(admins);
     }
+
+    public AdminLoginResDto adminLogin(AdminLoginReqDto reqDto) {
+        Admin admin = adminRepository.findByLoginId(reqDto.adminLoginId())
+            .orElseThrow(() -> new CustomException(ErrorCode.ADMIN_NOT_FOUND));
+
+        if (!passwordEncoder.matches(reqDto.password(), admin.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        String accessToken = jwtProvider.createAccessToken(
+            String.valueOf(admin.getId()), admin.getRole().name()
+        );
+
+        return new AdminLoginResDto(accessToken);
+    }
+
 
     private void validateDuplicateLoginId(String targetAdminLoginId) {
         if (adminRepository.existsByLoginId(targetAdminLoginId)) {
@@ -85,13 +111,13 @@ public class AdminService {
 
         Page<Application> applicationPage = findApplications(keyword, pageable);
 
-        if(applicationPage.getTotalElements() == 0){
-            throw new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
+        if (applicationPage.getTotalElements() == 0) {
+            return ApplicationListResDto.from(applicationPage);
         }
 
-        if(pageable.getPageNumber() >= applicationPage.getTotalPages()){
-            pageable = PageRequest.of(applicationPage.getTotalPages()-1, pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "createdAt"));
+        if (pageable.getPageNumber() >= applicationPage.getTotalPages()) {
+            pageable = PageRequest.of(applicationPage.getTotalPages() - 1, pageable.getPageSize(),
+                pageable.getSort());
             applicationPage = findApplications(keyword, pageable);
         }
 
@@ -107,4 +133,28 @@ public class AdminService {
         return applicationRepository.findByUserNameContainingOrFarmNameContaining(keyword, keyword, pageable);
     }
 
+    public UserListResDto getUsers(Long userId, Pageable pageable, String keyword) {
+        validateAdminId(userId);
+
+        Page<User> userPage = findUsers(keyword, pageable);
+
+        if (userPage.getTotalElements() == 0) {
+            return UserListResDto.from(userPage);
+        }
+
+        if (pageable.getPageNumber() >= userPage.getTotalPages()) {
+            pageable = PageRequest.of(userPage.getTotalPages() - 1, pageable.getPageSize(),
+                pageable.getSort());
+            userPage = findUsers(keyword, pageable);
+        }
+
+        return UserListResDto.from(userPage);
+    }
+    private Page<User> findUsers(String keyword , Pageable pageable){
+        if(keyword == null || keyword.isBlank()){
+            return userRepository.findAll(pageable);
+        }
+
+        return userRepository.findByUserNameContainingOrEmailContaining(keyword, keyword, pageable);
+    }
 }
