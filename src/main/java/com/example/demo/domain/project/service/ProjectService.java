@@ -30,8 +30,9 @@ public class ProjectService {
     private final AdminRepository adminRepository;
 
     private void validateAdmin(Long adminId) {
-        adminRepository.findById(adminId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ADMIN_UNAUTHORIZED));
+        if (!adminRepository.existsById(adminId)) {
+            throw new CustomException(ErrorCode.ADMIN_UNAUTHORIZED);
+        }
     }
 
     @Transactional
