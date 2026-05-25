@@ -1,5 +1,6 @@
 package com.example.demo.domain.project.service;
 
+import com.example.demo.domain.admin.repository.AdminRepository;
 import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
 import com.example.demo.domain.project.dto.request.ProjectCreateReqDto;
@@ -16,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,9 +27,17 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ApplicationRepository applicationRepository;
+    private final AdminRepository adminRepository;
+
+    private void validateAdmin(Long adminId) {
+        adminRepository.findById(adminId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ADMIN_UNAUTHORIZED));
+    }
 
     @Transactional
-    public void createProject(ProjectCreateReqDto request) {
+    public void createProject(Long adminId, ProjectCreateReqDto request) {
+        validateAdmin(adminId);
+
         // 이미 등록된 지원서인지 중복 검증
         if (projectRepository.existsByApplicationId(request.getApplicationId())) {
             throw new CustomException(ErrorCode.PROJECT_ALREADY_EXISTS);
@@ -56,7 +63,9 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateProject(Long projectId, ProjectUpdateReqDto request) {
+    public void updateProject(Long adminId, Long projectId, ProjectUpdateReqDto request) {
+        validateAdmin(adminId);
+
         // 수정할 선정업체 조회
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
@@ -88,7 +97,9 @@ public class ProjectService {
     }
 
     @Transactional
-    public void deleteProject(Long projectId) {
+    public void deleteProject(Long adminId, Long projectId) {
+        validateAdmin(adminId);
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
 
@@ -102,7 +113,9 @@ public class ProjectService {
 
     // 드래그 앤 드롭 다중 순서 업데이트 로직
     @Transactional
-    public void updateProjectOrders(List<ProjectOrderUpdateReqDto> orderRequests) {
+    public void updateProjectOrders(Long adminId, List<ProjectOrderUpdateReqDto> orderRequests) {
+        validateAdmin(adminId);
+
         List<Long> projectIds = orderRequests.stream()
                 .map(ProjectOrderUpdateReqDto::getProjectId)
                 .toList();
