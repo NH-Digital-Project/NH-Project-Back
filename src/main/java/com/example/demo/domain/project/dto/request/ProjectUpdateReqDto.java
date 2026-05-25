@@ -2,12 +2,13 @@ package com.example.demo.domain.project.dto.request;
 
 import com.example.demo.domain.project.entity.ProjectStatus;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.URL;
 
 @Getter
-@NoArgsConstructor // RequestBody 역직렬화를 위해 필요
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectUpdateReqDto {
 
     // 빈 문자열, 공백 입력을 차단하기 위해 @Pattern 추가
@@ -24,7 +25,6 @@ public class ProjectUpdateReqDto {
 
     private ProjectStatus status;
 
-    @URL(message = "올바른 URL 형식이 아닙니다.")
-    @Pattern(regexp = ".*\\S.*", message = "해피빈 URL은 공백만으로 비워둘 수 없습니다.")
+    @Pattern(regexp = "^(http(s)?://.+)?$", message = "올바른 URL 형식이 아닙니다.")
     private String happyBeanUrl;
 }

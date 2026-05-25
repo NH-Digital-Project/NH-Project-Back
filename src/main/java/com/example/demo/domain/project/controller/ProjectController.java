@@ -1,6 +1,7 @@
 package com.example.demo.domain.project.controller;
 
 import com.example.demo.domain.project.dto.request.ProjectCreateReqDto;
+import com.example.demo.domain.project.dto.request.ProjectOrderListReqDto;
 import com.example.demo.domain.project.dto.request.ProjectUpdateReqDto;
 import com.example.demo.domain.project.dto.response.ProjectListResDto;
 import com.example.demo.domain.project.entity.ProjectStatus;
@@ -50,5 +51,13 @@ public class ProjectController {
     ) {
         projectService.deleteProject(projectId);
         return ResponseEntity.ok(ApiResponse.successWithMessage("선정업체가 삭제되었습니다."));
+    }
+
+    @PatchMapping("/orders")
+    public ResponseEntity<ApiResponse<String>> updateProjectOrders(
+            @Valid @RequestBody ProjectOrderListReqDto request
+    ) {
+        projectService.updateProjectOrders(request.getOrders());
+        return ResponseEntity.ok(ApiResponse.successWithMessage("선정업체 노출 순서가 변경되었습니다."));
     }
 }

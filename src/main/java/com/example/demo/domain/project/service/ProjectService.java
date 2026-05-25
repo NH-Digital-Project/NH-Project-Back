@@ -3,6 +3,7 @@ package com.example.demo.domain.project.service;
 import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
 import com.example.demo.domain.project.dto.request.ProjectCreateReqDto;
+import com.example.demo.domain.project.dto.request.ProjectOrderUpdateReqDto;
 import com.example.demo.domain.project.dto.request.ProjectUpdateReqDto;
 import com.example.demo.domain.project.dto.response.ProjectListResDto;
 import com.example.demo.domain.project.dto.response.ProjectResDto;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,9 +74,9 @@ public class ProjectService {
     public ProjectListResDto getProjects(ProjectStatus status) {
         List<Project> projects;
 
-        if(status != null) { // 해당 status만 최신순으로 조회
-            projects = projectRepository.findByProjectStatusOrderByCreatedAtDesc(status);
-        } else { // 전체 조회
+        if(status != null) {
+            projects = projectRepository.findByProjectStatusOrderBySortOrderAscCreatedAtAsc(status);
+        } else {
             projects = projectRepository.findAllWithCustomOrder();
         }
 
@@ -95,5 +98,24 @@ public class ProjectService {
         }
 
         projectRepository.delete(project);
+    }
+
+    // 드래그 앤 드롭 다중 순서 업데이트 로직
+    @Transactional
+    public void updateProjectOrders(List<ProjectOrderUpdateReqDto> orderRequests) {
+        List<Long> projectIds = orderRequests.stream()
+                .map(ProjectOrderUpdateReqDto::getProjectId)
+                .toList();
+
+        Map<Long, Project> projectMap = projectRepository.findAllById(projectIds).stream()
+                .collect(Collectors.toMap(Project::getId, project -> project));
+
+        for (ProjectOrderUpdateReqDto request : orderRequests) {
+            Project project = projectMap.get(request.getProjectId());
+            if (project == null) {
+                throw new CustomException(ErrorCode.PROJECT_NOT_FOUND);
+            }
+            project.updateSortOrder(request.getSortOrder());
+        }
     }
 }

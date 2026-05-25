@@ -35,6 +35,7 @@ public enum ErrorCode {
     INVALID_BIRTH_DATE(HttpStatus.BAD_REQUEST, "유효하지 않은 생년월일입니다."),
     INVALID_CANCEL_PERIOD(HttpStatus.FORBIDDEN, "지원 취소는 마감 1시간 전까지만 가능합니다."),
     INVALID_APPLICATION_STATUS(HttpStatus.BAD_REQUEST, "SUBMITTED 상태의 지원서만 등록할 수 있습니다."),
+    APPLICATION_SUBMIT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "지원서 제출에 실패했습니다."),
 
     // Project
     PROJECT_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 선정업체로 등록된 지원서입니다."),
