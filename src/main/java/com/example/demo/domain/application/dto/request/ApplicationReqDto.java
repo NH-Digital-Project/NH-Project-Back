@@ -16,6 +16,7 @@ public class ApplicationReqDto {
 
     @NotNull(message = "생년월일은 필수입니다.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    @Past(message = "생년월일은 과거 날짜여야 합니다.")
     private final LocalDate birthDate;
 
     @NotBlank(message = "전화번호는 필수입니다.")
