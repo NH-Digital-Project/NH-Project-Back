@@ -17,11 +17,11 @@ public class ApplicationReqDto {
     @NotBlank(message = "전화번호는 필수입니다.")
     private final String phoneNumber;
 
+    @NotBlank(message = "성별은 필수입니다.")
+    private final String gender; // 성별
+
     @NotBlank(message = "농장명은 필수입니다.")
     private final String farmName;
-
-    @NotBlank(message = "소속 농협명은 필수입니다.")
-    private final String affiliatedNhName;
 
     @NotBlank(message = "우편번호는 필수입니다.")
     private final String zipcode;
@@ -35,6 +35,9 @@ public class ApplicationReqDto {
     @NotBlank(message = "사업자 등록 번호는 필수입니다.")
     private final String businessRegistrationNumber;
 
+    //Todo 필수 여부에 따라 NotBlank 필요
+    private final String agriRegistrationNumber; // 농업경영체번호
+
     @NotBlank(message = "주요 품목은 필수입니다.")
     private final String mainProduct;
 
@@ -43,6 +46,9 @@ public class ApplicationReqDto {
 
     @NotNull(message = "온라인 유통경험 여부는 필수입니다.")
     private final Boolean onlineDistributionExperience;
+
+    @NotNull(message = "펀딩 경험 여부는 필수입니다.")
+    private final Boolean fundingExperience; // 펀딩 참여 경험
 
     @NotBlank(message = "품목은 필수입니다.")
     private final String productCategory;
@@ -68,6 +74,10 @@ public class ApplicationReqDto {
     @NotBlank(message = "펀딩 계획은 필수입니다.")
     @Size(max = 1000, message = "펀딩 계획은 1000자 이내여야 합니다.")
     private final String fundingPlan;
+
+    @NotBlank(message = "지원 동기는 필수입니다.")
+    @Size(max = 1000)
+    private final String motivation; // 지원동기
 
     @NotNull(message = "동의 여부는 필수입니다.")
     @AssertTrue(message = "개인정보 수집 및 이용에 동의해야 지원이 가능합니다.")

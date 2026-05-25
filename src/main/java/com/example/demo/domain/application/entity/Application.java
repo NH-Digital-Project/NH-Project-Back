@@ -33,22 +33,26 @@ public class Application extends BaseSoftDeleteEntity {
 
     private String phoneNumber;
 
+    private String gender; // 성별
+
     private String applicationNumber;
 
     private String farmName;
-
-    private String affiliatedNhName;
 
     @Embedded
     private Address farmAddress;
 
     private String businessRegistrationNumber;
 
+    private String agriRegistrationNumber; // 농업경영체번호
+
     private String mainProduct;
 
     private Integer annualSales;
 
     private Boolean onlineDistributionExperience;
+
+    private Boolean fundingExperience; // 펀딩 참여 경험
 
     private String productCategory;
 
@@ -65,14 +69,18 @@ public class Application extends BaseSoftDeleteEntity {
     private Integer availableQuantity;
 
     @Column(columnDefinition = "TEXT")
+    private String motivation; // 지원동기
+
+    @Column(columnDefinition = "TEXT")
     private String fundingPlan;
+
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
     @Builder
     private Application(Long id, User user, String userName, String birthDate, String phoneNumber,
-        String applicationNumber, String farmName, String affiliatedNhName, Address farmAddress,
+        String applicationNumber, String farmName, Address farmAddress,
         String businessRegistrationNumber, String mainProduct, Integer annualSales,
         Boolean onlineDistributionExperience, String productCategory, String shippingDate,
         String fundingDesiredDate, String productName, String productSize, Integer sellingPrice,
@@ -84,7 +92,6 @@ public class Application extends BaseSoftDeleteEntity {
         this.phoneNumber = phoneNumber;
         this.applicationNumber = applicationNumber;
         this.farmName = farmName;
-        this.affiliatedNhName = affiliatedNhName;
         this.farmAddress = farmAddress;
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.mainProduct = mainProduct;

@@ -63,7 +63,6 @@ public class ApplicationService {
                 .phoneNumber(request.getPhoneNumber())
                 .applicationNumber(generateApplicationNumber())
                 .farmName(request.getFarmName())
-                .affiliatedNhName(request.getAffiliatedNhName())
                 .farmAddress(address)
                 .businessRegistrationNumber(request.getBusinessRegistrationNumber())
                 .mainProduct(request.getMainProduct())
