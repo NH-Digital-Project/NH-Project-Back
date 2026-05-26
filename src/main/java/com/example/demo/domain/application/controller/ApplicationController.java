@@ -1,6 +1,7 @@
 package com.example.demo.domain.application.controller;
 
 import com.example.demo.domain.application.dto.request.ApplicationReqDto;
+import com.example.demo.domain.application.dto.request.ApplicationUpdateReqDto;
 import com.example.demo.domain.application.dto.response.ApplicationStatusResDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.domain.application.dto.response.CreateApplicationResDto;
@@ -53,5 +54,14 @@ public class ApplicationController {
     ) {
         applicationService.deleteMyApplication(principalDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.successWithMessage("지원이 취소되었습니다."));
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<ApiResponse<String>> updateMyApplication(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @Valid @RequestBody ApplicationUpdateReqDto request
+    ) {
+        applicationService.updateMyApplication(principalDetails.getUserId(), request);
+        return ResponseEntity.ok(ApiResponse.successWithMessage("수정되었습니다."));
     }
 }
