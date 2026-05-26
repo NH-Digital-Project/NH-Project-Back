@@ -1,5 +1,5 @@
 -- ====================================================================
--- 1. 사용자(User) 데이터 10개 삽입 (변경됨: oauth_id, user_name, email, role 추가)
+-- 1. 사용자(User) 데이터 10개 삽입
 -- ====================================================================
 INSERT IGNORE INTO users (id, oauth_id, user_name, email, role, applied, created_at, updated_at) VALUES
 (1, 'naver_user_001', '김철수', 'chulsoo@example.com', 'ROLE_USER', false, NOW(), NOW()),
@@ -15,8 +15,9 @@ INSERT IGNORE INTO users (id, oauth_id, user_name, email, role, applied, created
 
 INSERT IGNORE INTO admins(id, login_id, admin_name, password, role, created_at, updated_at) VALUES
 (1, 'test', '최유림', '$2b$12$SYwFjnQ9RoY6SCPEFnbFMeJmFB1oRN3BLc/qJcU8P1Oz5qyfIUffS', 'ROLE_ADMIN', NOW(), NOW());
+
 -- ====================================================================
--- 2. 지원서(Application) 데이터 10개 삽입 (동일)
+-- 2. 지원서(Application) 데이터 10개 삽입 (날짜 형식 YYYY-MM-DD로 수정)
 -- ====================================================================
 INSERT IGNORE INTO applications (
     id,
@@ -150,19 +151,19 @@ INSERT IGNORE INTO applications (
  DATE_SUB(NOW(), INTERVAL 1 DAY));
 
 -- ====================================================================
--- 3. 선정업체(Project) 데이터 10개 삽입 (동일)
+-- 3. 선정업체(Project) 데이터 10개 삽입 (sort_order 추가)
 -- ====================================================================
 INSERT IGNORE INTO projects (
     id, application_id, farm_name, product_category, thumbnail_image_url,
-    description, project_status, happy_bean_url, created_at, updated_at
+    description, project_status, happy_bean_url, sort_order, created_at, updated_at
 ) VALUES
-(1, 1, '행복농장', '과일', 'https://example.com/images/apple.jpg', '친환경 사과 재배 농가입니다.', 'IN_PROGRESS', 'https://happybean.naver.com/donations/H000000001', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
-(4, 4, '달콤배농원', '과일', 'https://example.com/images/pear.jpg', '아삭하고 달콤한 신고배를 재배합니다.', 'IN_PROGRESS', 'https://happybean.naver.com/donations/H000000004', DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY)),
-(9, 9, '새콤딸기농원', '과일', NULL, '논산에서 자란 신선한 설향 딸기입니다.', 'IN_PROGRESS', 'https://happybean.naver.com/donations/H000000009', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
-(2, 2, '푸른채소농장', '채소', NULL, '스마트팜을 이용한 신선한 상추 재배.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000002', DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
-(5, 5, '싱싱벌꿀', '식음료', 'https://example.com/images/honey.jpg', '자연 그대로의 순수 아카시아 벌꿀입니다.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000005', DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
-(7, 7, '바른버섯팜', '채소', 'https://example.com/images/mushroom.jpg', '무농약으로 안전하게 키운 표고버섯입니다.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000007', DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
-(10, 10, '건강한포크', '축산', 'https://example.com/images/pork.jpg', '엄격하게 관리된 최고급 한돈 삼겹살.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000010', DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
-(3, 3, '맑은한우농장', '축산', 'https://example.com/images/beef.jpg', '강원도 횡성 명품 한우 가공 농가입니다.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000003', DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
-(6, 6, '황금귤농장', '과일', NULL, '제주 햇살을 가득 머금은 새콤달콤 감귤.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000006', DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
-(8, 8, '구수한정미소', '곡물', 'https://example.com/images/rice.jpg', '윤기 흐르고 찰진 최고급 이천 쌀입니다.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000008', DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY));
+(1, 1, '행복농장', '과일', 'https://example.com/images/apple.jpg', '친환경 사과 재배 농가입니다.', 'IN_PROGRESS', 'https://happybean.naver.com/donations/H000000001', 1, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(4, 4, '달콤배농원', '과일', 'https://example.com/images/pear.jpg', '아삭하고 달콤한 신고배를 재배합니다.', 'IN_PROGRESS', 'https://happybean.naver.com/donations/H000000004', 2, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(9, 9, '새콤딸기농원', '과일', NULL, '논산에서 자란 신선한 설향 딸기입니다.', 'IN_PROGRESS', 'https://happybean.naver.com/donations/H000000009', 3, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(2, 2, '푸른채소농장', '채소', NULL, '스마트팜을 이용한 신선한 상추 재배.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000002', 1, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(5, 5, '싱싱벌꿀', '식음료', 'https://example.com/images/honey.jpg', '자연 그대로의 순수 아카시아 벌꿀입니다.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000005', 2, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(7, 7, '바른버섯팜', '채소', 'https://example.com/images/mushroom.jpg', '무농약으로 안전하게 키운 표고버섯입니다.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000007', 3, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(10, 10, '건강한포크', '축산', 'https://example.com/images/pork.jpg', '엄격하게 관리된 최고급 한돈 삼겹살.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000010', 4, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(3, 3, '맑은한우농장', '축산', 'https://example.com/images/beef.jpg', '강원도 횡성 명품 한우 가공 농가입니다.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000003', 1, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(6, 6, '황금귤농장', '과일', NULL, '제주 햇살을 가득 머금은 새콤달콤 감귤.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000006', 2, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(8, 8, '구수한정미소', '곡물', 'https://example.com/images/rice.jpg', '윤기 흐르고 찰진 최고급 이천 쌀입니다.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000008', 3, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY));
