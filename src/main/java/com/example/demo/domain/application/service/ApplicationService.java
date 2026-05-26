@@ -64,14 +64,16 @@ public class ApplicationService {
                 .userName(request.getUserName())
                 .birthDate(request.getBirthDate())
                 .phoneNumber(request.getPhoneNumber())
+                .gender(request.getGender())
                 .applicationNumber(generateApplicationNumber())
                 .farmName(request.getFarmName())
-                .affiliatedNhName(request.getAffiliatedNhName())
                 .farmAddress(address)
                 .businessRegistrationNumber(request.getBusinessRegistrationNumber())
+                .agriRegistrationNumber(request.getAgriRegistrationNumber())
                 .mainProduct(request.getMainProduct())
                 .annualSales(request.getAnnualSales())
                 .onlineDistributionExperience(request.getOnlineDistributionExperience())
+                .fundingExperience(request.getFundingExperience())
                 .productCategory(request.getProductCategory())
                 .shippingDate(request.getShippingDate())
                 .fundingDesiredDate(request.getFundingDesiredDate())
@@ -79,6 +81,7 @@ public class ApplicationService {
                 .productSize(request.getProductSize())
                 .sellingPrice(request.getSellingPrice())
                 .availableQuantity(request.getAvailableQuantity())
+                .motivation(request.getMotivation())
                 .fundingPlan(request.getFundingPlan())
                 .status(ApplicationStatus.SUBMITTED)
                 .build();
@@ -148,6 +151,13 @@ public class ApplicationService {
         validateCancelPeriod();
 
         application.cancel();
+    }
+
+    public ApplicationResDto getApplication(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+            .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        return ApplicationResDto.from(application);
     }
 
     private void validateCancelPeriod() {

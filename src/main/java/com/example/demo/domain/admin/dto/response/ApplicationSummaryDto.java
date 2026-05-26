@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 public class ApplicationSummaryDto {
 
+    private final Long applicationId;
     private final String applicationNumber;
     private final LocalDateTime createdAt;
     private final String userName;
@@ -20,6 +21,7 @@ public class ApplicationSummaryDto {
 
     public static ApplicationSummaryDto from(Application application){
         return ApplicationSummaryDto.builder()
+                   .applicationId(application.getId())
                    .applicationNumber(application.getApplicationNumber())
                    .createdAt(application.getCreatedAt())
                    .userName(application.getUserName())
