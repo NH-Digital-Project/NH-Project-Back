@@ -13,15 +13,15 @@ import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +30,13 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
+    private static final ZoneId KST_ZONE = ZoneId.of("Asia/Seoul");
 
-    // 임의로 사업 신청 시간 설정
-    private static final LocalDateTime APPLICATION_START_TIME = LocalDateTime.of(2026, 5, 1, 0, 0);
-    private static final LocalDateTime APPLICATION_END_TIME = LocalDateTime.of(2026,12,31,23,59);
+    @Value("${app.application.start-time}")
+    private LocalDateTime startTime;
+
+    @Value("${app.application.end-time}")
+    private LocalDateTime endTime;
 
     @Transactional
     public CreateApplicationResDto createApplication(Long userId, ApplicationReqDto request) {
@@ -61,14 +64,16 @@ public class ApplicationService {
                 .userName(request.getUserName())
                 .birthDate(request.getBirthDate())
                 .phoneNumber(request.getPhoneNumber())
+                .gender(request.getGender())
                 .applicationNumber(generateApplicationNumber())
                 .farmName(request.getFarmName())
-                .affiliatedNhName(request.getAffiliatedNhName())
                 .farmAddress(address)
                 .businessRegistrationNumber(request.getBusinessRegistrationNumber())
+                .agriRegistrationNumber(request.getAgriRegistrationNumber())
                 .mainProduct(request.getMainProduct())
                 .annualSales(request.getAnnualSales())
                 .onlineDistributionExperience(request.getOnlineDistributionExperience())
+                .fundingExperience(request.getFundingExperience())
                 .productCategory(request.getProductCategory())
                 .shippingDate(request.getShippingDate())
                 .fundingDesiredDate(request.getFundingDesiredDate())
@@ -76,6 +81,7 @@ public class ApplicationService {
                 .productSize(request.getProductSize())
                 .sellingPrice(request.getSellingPrice())
                 .availableQuantity(request.getAvailableQuantity())
+                .motivation(request.getMotivation())
                 .fundingPlan(request.getFundingPlan())
                 .status(ApplicationStatus.SUBMITTED)
                 .build();
@@ -91,8 +97,9 @@ public class ApplicationService {
 
     // 사업 신청 기간 검증
     private void validateApplicationPeriod() {
-        LocalDateTime now = LocalDateTime.now();
-        if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME)) {
+        LocalDateTime now = LocalDateTime.now(KST_ZONE);
+
+        if(now.isBefore(startTime) || now.isAfter(endTime)) {
             throw new CustomException(ErrorCode.INVALID_APPLICATION_PERIOD);
         }
     }
@@ -146,11 +153,18 @@ public class ApplicationService {
         application.cancel();
     }
 
+    public ApplicationResDto getApplication(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+            .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        return ApplicationResDto.from(application);
+    }
+
     private void validateCancelPeriod() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(KST_ZONE);
 
         // 신청 기간 내 + 마감 1시간 전까지 취소 가능
-        if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME.minusHours(1))) {
+        if(now.isBefore(startTime) || now.isAfter(endTime.minusHours(1))) {
             throw new CustomException(ErrorCode.INVALID_CANCEL_PERIOD);
         }
     }

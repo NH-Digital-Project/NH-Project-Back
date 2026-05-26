@@ -8,6 +8,7 @@ import com.example.demo.domain.admin.dto.response.AdminLoginResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.service.AdminService;
+import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.global.common.dto.ApiResponse;
 import com.example.demo.global.security.PrincipalDetails;
 import jakarta.validation.Valid;
@@ -80,15 +81,23 @@ public class AdminController {
         @Valid @RequestBody AdminLoginReqDto reqDto) {
         return ResponseEntity.ok(ApiResponse.success(adminService.adminLogin(reqDto)));
     }
-  
+
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<UserListResDto>> getUsers(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
         @RequestParam(required = false) String keyword
-    ){
+    ) {
         return ResponseEntity.ok(
             ApiResponse.success(adminService.getUsers(principalDetails.getUserId(), pageable, keyword))
         );
+    }
+
+    @GetMapping("/applications/{applicationId}")
+    public ResponseEntity<ApiResponse<ApplicationResDto>> getApplication(
+        @PathVariable Long applicationId, @AuthenticationPrincipal
+    PrincipalDetails principalDetails) {
+        return ResponseEntity.ok(ApiResponse.success(
+            adminService.getApplication(principalDetails.getUserId(), applicationId)));
     }
 }

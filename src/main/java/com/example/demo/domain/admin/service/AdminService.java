@@ -9,8 +9,10 @@ import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
+import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
+import com.example.demo.domain.application.service.ApplicationService;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
@@ -36,6 +38,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
+    private final ApplicationService applicationService;
 
 
     @Transactional
@@ -152,6 +155,12 @@ public class AdminService {
 
         return UserListResDto.from(userPage);
     }
+
+    public ApplicationResDto getApplication(Long adminId, Long applicationId) {
+        validateAdminId(adminId);
+        return applicationService.getApplication(applicationId);
+    }
+
     private Page<User> findUsers(String keyword , Pageable pageable){
         if(keyword == null || keyword.isBlank()){
             return userRepository.findAll(pageable);
