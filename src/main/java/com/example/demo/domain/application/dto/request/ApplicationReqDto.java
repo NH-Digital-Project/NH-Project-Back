@@ -76,7 +76,7 @@ public class ApplicationReqDto {
     private final String fundingPlan;
 
     @NotBlank(message = "지원 동기는 필수입니다.")
-    @Size(max = 1000)
+    @Size(max = 1000, message = "지원 동기는 1000자 이내여야 합니다.")
     private final String motivation; // 지원동기
 
     @NotNull(message = "동의 여부는 필수입니다.")
