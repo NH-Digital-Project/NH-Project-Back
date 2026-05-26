@@ -34,7 +34,6 @@ public class ApplicationReqDto {
     @NotBlank(message = "주소는 필수입니다.")
     private final String streetAddress;
 
-    @NotBlank(message = "상세 주소는 필수입니다.")
     private final String detailAddress;
 
     @NotBlank(message = "사업자 등록 번호는 필수입니다.")
