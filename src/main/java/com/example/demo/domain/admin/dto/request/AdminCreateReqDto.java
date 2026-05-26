@@ -18,11 +18,11 @@ public class AdminCreateReqDto {
     @NotBlank(message = "비밀번호는 필수값입니다.")
     private final String password;
 
-    public Admin toEntity(){
+    public Admin toEntity(String encodedPassword){
         return Admin.builder()
                    .loginId(adminLoginId)
                    .adminName(adminName)
-                   .password(password)
+                   .password(encodedPassword)
                    .build();
     }
 }

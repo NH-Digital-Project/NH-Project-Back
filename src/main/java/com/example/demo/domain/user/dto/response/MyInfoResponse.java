@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 
 public record MyInfoResponse (
     Long userId,
-    String oauthId,
+    String email,
     String userName,
     LocalDateTime createdAt
 ) {
 
     public static MyInfoResponse from(User user) {
-        return new MyInfoResponse(user.getId(), user.getOauthId(), user.getUserName(),
+        return new MyInfoResponse(user.getId(), user.getEmail(), user.getUserName(),
             user.getCreatedAt());
     }
 

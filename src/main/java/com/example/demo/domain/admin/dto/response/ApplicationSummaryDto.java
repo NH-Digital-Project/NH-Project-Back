@@ -10,21 +10,25 @@ import lombok.Getter;
 @Getter
 public class ApplicationSummaryDto {
 
+    private final Long applicationId;
     private final String applicationNumber;
     private final LocalDateTime createdAt;
     private final String userName;
     private final String farmName;
     private final String productCategory;
     private final ApplicationStatus status;
+    private final LocalDateTime deletedAt;
 
     public static ApplicationSummaryDto from(Application application){
         return ApplicationSummaryDto.builder()
+                   .applicationId(application.getId())
                    .applicationNumber(application.getApplicationNumber())
                    .createdAt(application.getCreatedAt())
                    .userName(application.getUserName())
                    .farmName(application.getFarmName())
                    .productCategory(application.getProductCategory())
                    .status(application.getStatus())
+                .deletedAt(application.getDeletedAt())
                    .build();
     }
 }

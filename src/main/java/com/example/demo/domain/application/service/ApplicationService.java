@@ -13,14 +13,15 @@ import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 
 @Service
 @RequiredArgsConstructor
@@ -29,23 +30,25 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
+    private static final ZoneId KST_ZONE = ZoneId.of("Asia/Seoul");
 
-    // 임의로 사업 신청 시간 설정
-    private static final LocalDateTime APPLICATION_START_TIME = LocalDateTime.of(2026, 5, 1, 0, 0);
-    private static final LocalDateTime APPLICATION_END_TIME = LocalDateTime.of(2026,12,31,23,59);
+    @Value("${app.application.start-time}")
+    private LocalDateTime startTime;
+
+    @Value("${app.application.end-time}")
+    private LocalDateTime endTime;
 
     @Transactional
     public CreateApplicationResDto createApplication(Long userId, ApplicationReqDto request) {
 
         // 사업 신청 기간 및 생년월일 검증
         validateApplicationPeriod();
-        validateBirthDate(request.getBirthDate());
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 계정당 1번 지원 검증
-        if(applicationRepository.existsByUserId(userId)) {
+        if(applicationRepository.existsByUserIdAndDeletedAtIsNull(userId)) {
             throw new CustomException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
 
@@ -61,14 +64,16 @@ public class ApplicationService {
                 .userName(request.getUserName())
                 .birthDate(request.getBirthDate())
                 .phoneNumber(request.getPhoneNumber())
+                .gender(request.getGender())
                 .applicationNumber(generateApplicationNumber())
                 .farmName(request.getFarmName())
-                .affiliatedNhName(request.getAffiliatedNhName())
                 .farmAddress(address)
                 .businessRegistrationNumber(request.getBusinessRegistrationNumber())
+                .agriRegistrationNumber(request.getAgriRegistrationNumber())
                 .mainProduct(request.getMainProduct())
                 .annualSales(request.getAnnualSales())
                 .onlineDistributionExperience(request.getOnlineDistributionExperience())
+                .fundingExperience(request.getFundingExperience())
                 .productCategory(request.getProductCategory())
                 .shippingDate(request.getShippingDate())
                 .fundingDesiredDate(request.getFundingDesiredDate())
@@ -76,30 +81,26 @@ public class ApplicationService {
                 .productSize(request.getProductSize())
                 .sellingPrice(request.getSellingPrice())
                 .availableQuantity(request.getAvailableQuantity())
+                .motivation(request.getMotivation())
                 .fundingPlan(request.getFundingPlan())
                 .status(ApplicationStatus.SUBMITTED)
                 .build();
 
-        Application submittedApplication = applicationRepository.save(application);
-        return CreateApplicationResDto.from(submittedApplication);
+        try {
+            Application submittedApplication = applicationRepository.save(application);
+            return CreateApplicationResDto.from(submittedApplication);
+        } catch (DataIntegrityViolationException e) {
+            // 지원서 번호 제약 조건 위배 시 발생하는 예외 처리
+            throw new CustomException(ErrorCode.APPLICATION_SUBMIT_FAILED);
+        }
     }
 
     // 사업 신청 기간 검증
     private void validateApplicationPeriod() {
-        LocalDateTime now = LocalDateTime.now();
-        if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME)) {
-            throw new CustomException(ErrorCode.INVALID_APPLICATION_PERIOD);
-        }
-    }
+        LocalDateTime now = LocalDateTime.now(KST_ZONE);
 
-    // 생년월일 검증
-    private void validateBirthDate(String birthDateStr) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMMdd").withResolverStyle(ResolverStyle.STRICT);
-            LocalDate birthDate = LocalDate.parse(birthDateStr, formatter);
-            if (birthDate.isAfter(LocalDate.now())) throw new CustomException(ErrorCode.INVALID_BIRTH_DATE);
-        } catch (DateTimeParseException e) {
-            throw new CustomException(ErrorCode.INVALID_BIRTH_DATE);
+        if(now.isBefore(startTime) || now.isAfter(endTime)) {
+            throw new CustomException(ErrorCode.INVALID_APPLICATION_PERIOD);
         }
     }
 
@@ -125,14 +126,14 @@ public class ApplicationService {
     }
 
     public ApplicationResDto getMyApplication(Long userId) {
-        Application application = applicationRepository.findByUserId(userId)
+        Application application = applicationRepository.findByUserIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
 
         return ApplicationResDto.from(application);
     }
 
     public ApplicationStatusResDto getMyApplicationStatus(Long userId) {
-        Application application = applicationRepository.findByUserId(userId).orElse(null);
+        Application application = applicationRepository.findByUserIdAndDeletedAtIsNull(userId).orElse(null);
 
         if(application == null) {
             return null;
@@ -143,7 +144,7 @@ public class ApplicationService {
 
     @Transactional
     public void deleteMyApplication(Long userId) {
-        Application application = applicationRepository.findByUserId(userId)
+        Application application = applicationRepository.findByUserIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
 
         // 취소 가능 시간 검증
@@ -152,11 +153,18 @@ public class ApplicationService {
         application.cancel();
     }
 
+    public ApplicationResDto getApplication(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+            .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        return ApplicationResDto.from(application);
+    }
+
     private void validateCancelPeriod() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(KST_ZONE);
 
         // 신청 기간 내 + 마감 1시간 전까지 취소 가능
-        if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME.minusHours(1))) {
+        if(now.isBefore(startTime) || now.isAfter(endTime.minusHours(1))) {
             throw new CustomException(ErrorCode.INVALID_CANCEL_PERIOD);
         }
     }
