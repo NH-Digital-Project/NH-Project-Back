@@ -35,42 +35,45 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     private final AdminService adminService;
-    private final Long USER_ID = 1L;
 
     @PostMapping
     public ResponseEntity<ApiResponse<AdminCreateResDto>> createAdmin(
-        //Todo: 사용자(관리자) 검증 필요
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
         @Valid @RequestBody AdminCreateReqDto createReqDto
     ) {
 
-        return ResponseEntity.ok(ApiResponse.success(adminService.createAdmin(createReqDto)));
+        return ResponseEntity.ok(ApiResponse.success(adminService.createAdmin(principalDetails.getUserId(),createReqDto)));
 
 
     }
 
     @DeleteMapping("/{adminId}")
     public ResponseEntity<ApiResponse<String>> deleteAdmin(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable Long adminId
     ) {
-        adminService.deleteAdmin(USER_ID, adminId);
-        // 현재 ApiResponse에서 성공시 데이터만 넘기고 있는데 메시지를 data로 넘기는게 어색한데 ApiResponse에 메시지 필드를 추가하는건 어떤지?
+        adminService.deleteAdmin(principalDetails.getUserId(), adminId);
         return ResponseEntity.ok(ApiResponse.successWithMessage("계정정보가 삭제되었습니다."));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<AdminListResDto>> getAdmins() {
-        return ResponseEntity.ok(ApiResponse.success(adminService.getAdmins(USER_ID)));
+    public ResponseEntity<ApiResponse<AdminListResDto>> getAdmins(
+        @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(adminService.getAdmins(
+            principalDetails.getUserId())));
     }
 
 
     // 관리자가 지원자(지원서)의 목록을 조회하는 API
     @GetMapping("/applications")
     public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PageableDefault(size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
         @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(
-            ApiResponse.success(adminService.getApplications(USER_ID, pageable, keyword)));
+            ApiResponse.success(adminService.getApplications(principalDetails.getUserId(), pageable, keyword)));
     }
 
     @PostMapping("/login")
@@ -81,11 +84,12 @@ public class AdminController {
 
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<UserListResDto>> getUsers(
-        @PageableDefault(size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @PageableDefault(size = 10 , sort = "createdAt" , direction = Direction.DESC) Pageable pageable,
         @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok(
-            ApiResponse.success(adminService.getUsers(USER_ID, pageable, keyword))
+            ApiResponse.success(adminService.getUsers(principalDetails.getUserId(), pageable, keyword))
         );
     }
 
