@@ -34,23 +34,27 @@ public class Application extends BaseSoftDeleteEntity {
 
     private String phoneNumber;
 
+    private String gender; // 성별
+
     @Column(unique = true) // 지원서 번호에 제약 조건 추가하여 동일 번호 생성 방지
     private String applicationNumber;
 
     private String farmName;
-
-    private String affiliatedNhName;
 
     @Embedded
     private Address farmAddress;
 
     private String businessRegistrationNumber;
 
+    private String agriRegistrationNumber; // 농업경영체번호
+
     private String mainProduct;
 
     private BigDecimal annualSales;
 
     private Boolean onlineDistributionExperience;
+
+    private Boolean fundingExperience; // 펀딩 참여 경험
 
     private String productCategory;
 
@@ -67,31 +71,37 @@ public class Application extends BaseSoftDeleteEntity {
     private Integer availableQuantity;
 
     @Column(columnDefinition = "TEXT")
+    private String motivation; // 지원동기
+
+    @Column(columnDefinition = "TEXT")
     private String fundingPlan;
+
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
     @Builder
     private Application(Long id, User user, String userName, LocalDate birthDate, String phoneNumber,
-        String applicationNumber, String farmName, String affiliatedNhName, Address farmAddress,
-        String businessRegistrationNumber, String mainProduct, BigDecimal annualSales,
-        Boolean onlineDistributionExperience, String productCategory, LocalDate shippingDate,
+        String gender, String applicationNumber, String farmName, Address farmAddress,
+        String businessRegistrationNumber, String agriRegistrationNumber, String mainProduct, BigDecimal annualSales,
+        Boolean onlineDistributionExperience, Boolean fundingExperience, String productCategory, LocalDate shippingDate,
         LocalDate fundingDesiredDate, String productName, String productSize, BigDecimal sellingPrice,
-        Integer availableQuantity, String fundingPlan, ApplicationStatus status) {
+        Integer availableQuantity, String motivation, String fundingPlan, ApplicationStatus status) {
         this.id = id;
         this.user = user;
         this.userName = userName;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
+        this.gender = gender;
         this.applicationNumber = applicationNumber;
         this.farmName = farmName;
-        this.affiliatedNhName = affiliatedNhName;
         this.farmAddress = farmAddress;
         this.businessRegistrationNumber = businessRegistrationNumber;
+        this.agriRegistrationNumber = agriRegistrationNumber;
         this.mainProduct = mainProduct;
         this.annualSales = annualSales;
         this.onlineDistributionExperience = onlineDistributionExperience;
+        this.fundingExperience = fundingExperience;
         this.productCategory = productCategory;
         this.shippingDate = shippingDate;
         this.fundingDesiredDate = fundingDesiredDate;
@@ -99,13 +109,14 @@ public class Application extends BaseSoftDeleteEntity {
         this.productSize = productSize;
         this.sellingPrice = sellingPrice;
         this.availableQuantity = availableQuantity;
+        this.motivation = motivation;
         this.fundingPlan = fundingPlan;
         this.status = status != null ? status : ApplicationStatus.SUBMITTED;
     }
 
     public void cancel() {
         // ApplicationStatus가 SUBMITTED일때만 취소 가능
-        if(this.status != ApplicationStatus.SUBMITTED) {
+        if (this.status != ApplicationStatus.SUBMITTED) {
             throw new CustomException(ErrorCode.APPLICATION_NOT_DELETABLE);
         }
 
