@@ -1,9 +1,12 @@
 package com.example.demo.domain.application.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @RequiredArgsConstructor
@@ -11,8 +14,10 @@ public class ApplicationReqDto {
     @NotBlank(message = "이름은 필수입니다.")
     private final String userName;
 
-    @NotBlank(message = "생년월일은 필수입니다.")
-    private final String birthDate;
+    @NotNull(message = "생년월일은 필수입니다.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    @Past(message = "생년월일은 과거 날짜여야 합니다.")
+    private final LocalDate birthDate;
 
     @NotBlank(message = "전화번호는 필수입니다.")
     private final String phoneNumber;
@@ -42,7 +47,7 @@ public class ApplicationReqDto {
     private final String mainProduct;
 
     @NotNull(message = "연매출액은 필수입니다.")
-    private final Integer annualSales;
+    private final BigDecimal annualSales;
 
     @NotNull(message = "온라인 유통경험 여부는 필수입니다.")
     private final Boolean onlineDistributionExperience;
@@ -53,11 +58,13 @@ public class ApplicationReqDto {
     @NotBlank(message = "품목은 필수입니다.")
     private final String productCategory;
 
-    @NotBlank(message = "출하시기는 필수입니다.")
-    private final String shippingDate;
+    @NotNull(message = "출하시기는 필수입니다.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private final LocalDate shippingDate;
 
-    @NotBlank(message = "펀딩 희망시기는 필수입니다.")
-    private final String fundingDesiredDate;
+    @NotNull(message = "펀딩 희망시기는 필수입니다.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private final LocalDate fundingDesiredDate;
 
     @NotBlank(message = "상품명은 필수입니다.")
     private final String productName;
@@ -66,7 +73,7 @@ public class ApplicationReqDto {
     private final String productSize;
 
     @NotNull(message = "판매 가격은 필수입니다.")
-    private final Integer sellingPrice;
+    private final BigDecimal sellingPrice;
 
     @NotNull(message = "판매 가능 수량은 필수입니다.")
     private final Integer availableQuantity;

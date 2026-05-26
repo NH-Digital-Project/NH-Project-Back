@@ -17,6 +17,7 @@ public class ApplicationSummaryDto {
     private final String farmName;
     private final String productCategory;
     private final ApplicationStatus status;
+    private final LocalDateTime deletedAt;
 
     public static ApplicationSummaryDto from(Application application){
         return ApplicationSummaryDto.builder()
@@ -27,6 +28,7 @@ public class ApplicationSummaryDto {
                    .farmName(application.getFarmName())
                    .productCategory(application.getProductCategory())
                    .status(application.getStatus())
+                .deletedAt(application.getDeletedAt())
                    .build();
     }
 }

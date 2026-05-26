@@ -2,10 +2,13 @@ package com.example.demo.domain.application.dto.response;
 
 import com.example.demo.domain.application.entity.Address;
 import com.example.demo.domain.application.entity.Application;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,8 +17,10 @@ import java.time.LocalDateTime;
 public class ApplicationResDto {
     private final Long userId;
     private final String name;
-    private final String birthDate;
     private final String gender; // 성별
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private final LocalDate birthDate;
+
     private final String phoneNumber;
     private final String farmName;
 
@@ -27,15 +32,17 @@ public class ApplicationResDto {
     private final String businessRegistrationNumber;
     private final String agriRegistrationNumber; // 농업경영체번호
     private final String mainProduct;
-    private final Integer annualSales;
+    private final BigDecimal annualSales;
     private final Boolean onlineDistributionExperience;
     private final Boolean fundingExperience; // 펀딩 참여 경험
     private final String productCategory;
-    private final String shippingDate;
-    private final String fundingDesiredDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private final LocalDate shippingDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private final LocalDate fundingDesiredDate;
     private final String productName;
     private final String productSize;
-    private final Integer sellingPrice;
+    private final BigDecimal sellingPrice;
     private final Integer availableQuantity;
     private final String motivation; // 지원동기
     private final String fundingPlan;

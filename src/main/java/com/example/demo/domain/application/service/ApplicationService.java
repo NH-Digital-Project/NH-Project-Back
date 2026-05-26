@@ -13,6 +13,7 @@ import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,13 +40,12 @@ public class ApplicationService {
 
         // 사업 신청 기간 및 생년월일 검증
         validateApplicationPeriod();
-        validateBirthDate(request.getBirthDate());
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 계정당 1번 지원 검증
-        if(applicationRepository.existsByUserId(userId)) {
+        if(applicationRepository.existsByUserIdAndDeletedAtIsNull(userId)) {
             throw new CustomException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
 
@@ -83,8 +83,13 @@ public class ApplicationService {
                 .status(ApplicationStatus.SUBMITTED)
                 .build();
 
-        Application submittedApplication = applicationRepository.save(application);
-        return CreateApplicationResDto.from(submittedApplication);
+        try {
+            Application submittedApplication = applicationRepository.save(application);
+            return CreateApplicationResDto.from(submittedApplication);
+        } catch (DataIntegrityViolationException e) {
+            // 지원서 번호 제약 조건 위배 시 발생하는 예외 처리
+            throw new CustomException(ErrorCode.APPLICATION_SUBMIT_FAILED);
+        }
     }
 
     // 사업 신청 기간 검증
@@ -92,17 +97,6 @@ public class ApplicationService {
         LocalDateTime now = LocalDateTime.now();
         if(now.isBefore(APPLICATION_START_TIME) || now.isAfter(APPLICATION_END_TIME)) {
             throw new CustomException(ErrorCode.INVALID_APPLICATION_PERIOD);
-        }
-    }
-
-    // 생년월일 검증
-    private void validateBirthDate(String birthDateStr) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuuMMdd").withResolverStyle(ResolverStyle.STRICT);
-            LocalDate birthDate = LocalDate.parse(birthDateStr, formatter);
-            if (birthDate.isAfter(LocalDate.now())) throw new CustomException(ErrorCode.INVALID_BIRTH_DATE);
-        } catch (DateTimeParseException e) {
-            throw new CustomException(ErrorCode.INVALID_BIRTH_DATE);
         }
     }
 
@@ -128,14 +122,14 @@ public class ApplicationService {
     }
 
     public ApplicationResDto getMyApplication(Long userId) {
-        Application application = applicationRepository.findByUserId(userId)
+        Application application = applicationRepository.findByUserIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
 
         return ApplicationResDto.from(application);
     }
 
     public ApplicationStatusResDto getMyApplicationStatus(Long userId) {
-        Application application = applicationRepository.findByUserId(userId).orElse(null);
+        Application application = applicationRepository.findByUserIdAndDeletedAtIsNull(userId).orElse(null);
 
         if(application == null) {
             return null;
@@ -146,7 +140,7 @@ public class ApplicationService {
 
     @Transactional
     public void deleteMyApplication(Long userId) {
-        Application application = applicationRepository.findByUserId(userId)
+        Application application = applicationRepository.findByUserIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
 
         // 취소 가능 시간 검증
