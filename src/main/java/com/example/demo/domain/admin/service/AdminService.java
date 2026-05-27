@@ -135,7 +135,7 @@ public class AdminService {
         if (keyword == null || keyword.isBlank()) {
             return applicationRepository.findAll(pageable);
         }
-        return applicationRepository.findByUserNameContainingOrFarmNameContaining(keyword, keyword, pageable);
+        return applicationRepository.findByUserNameContainingOrBusinessNameContaining(keyword, keyword, pageable);
     }
 
     public UserListResDto getUsers(Long userId, Pageable pageable, String keyword) {

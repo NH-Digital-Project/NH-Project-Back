@@ -11,11 +11,13 @@ import com.example.demo.domain.project.dto.response.ProjectResDto;
 import com.example.demo.domain.project.entity.Project;
 import com.example.demo.domain.project.entity.ProjectStatus;
 import com.example.demo.domain.project.repository.ProjectRepository;
+import com.example.demo.global.common.service.S3Service;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ApplicationRepository applicationRepository;
     private final AdminRepository adminRepository;
+    private final S3Service s3Service;
 
     private void validateAdmin(Long adminId) {
         if (!adminRepository.existsById(adminId)) {
@@ -36,7 +39,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public void createProject(Long adminId, ProjectCreateReqDto request) {
+    public void createProject(Long adminId, ProjectCreateReqDto request, MultipartFile thumbnail) {
         validateAdmin(adminId);
 
         // 이미 등록된 지원서인지 중복 검증
@@ -50,11 +53,14 @@ public class ProjectService {
 
         application.approve();
 
+        // S3 업로드 및 URL 반환
+        String s3ImageUrl = s3Service.uploadFile(thumbnail);
+
         Project project = Project.builder()
                 .application(application)
                 .farmName(request.getFarmName())
                 .productCategory(request.getProductCategory())
-                .thumbnailImageUrl(request.getThumbnailImageUrl())
+                .thumbnailImageUrl(s3ImageUrl)
                 .description(request.getDescription())
                 .projectStatus(request.getStatus())
                 .happyBeanUrl(request.getHappyBeanUrl())
@@ -64,17 +70,31 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateProject(Long adminId, Long projectId, ProjectUpdateReqDto request) {
+    public void updateProject(Long adminId, Long projectId, ProjectUpdateReqDto request, MultipartFile thumbnail) {
         validateAdmin(adminId);
 
         // 수정할 선정업체 조회
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
 
+        // 이미지가 새로 들어왔다면 기존 이미지 삭제 후 새 이미지 업로드
+        String imageUrl = project.getThumbnailImageUrl();
+        if (thumbnail != null && !thumbnail.isEmpty()) {
+            String newImageUrl = s3Service.uploadFile(thumbnail);
+
+            // 기존에 등록되어 있던 이미지가 있다면 S3에서 삭제
+            if (imageUrl != null) {
+                s3Service.deleteFile(imageUrl);
+            }
+
+            // 엔티티에 넘겨줄 주소를 새 S3 주소로 교체
+            imageUrl = newImageUrl;
+        }
+
         project.update(
                 request.getFarmName(),
                 request.getProductCategory(),
-                request.getThumbnailImageUrl(),
+                imageUrl, // 새로 갱신된 URL 전달
                 request.getDescription(),
                 request.getStatus(),
                 request.getHappyBeanUrl()
@@ -110,6 +130,12 @@ public class ProjectService {
         }
 
         projectRepository.delete(project);
+        projectRepository.flush(); // DB에서 삭제 및 제약조건 위반 검증을 먼저 수행
+
+        // DB 삭제가 완전히 성공한 이후에 S3 파일을 삭제
+        if (project.getThumbnailImageUrl() != null) {
+            s3Service.deleteFile(project.getThumbnailImageUrl());
+        }
     }
 
     // 드래그 앤 드롭 다중 순서 업데이트 로직

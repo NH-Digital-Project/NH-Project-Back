@@ -25,8 +25,8 @@ public class ApplicationReqDto {
     @NotBlank(message = "성별은 필수입니다.")
     private final String gender; // 성별
 
-    @NotBlank(message = "농장명은 필수입니다.")
-    private final String farmName;
+    @NotBlank(message = "사업자명은 필수입니다.")
+    private final String businessName;
 
     @NotBlank(message = "우편번호는 필수입니다.")
     private final String zipcode;
@@ -37,9 +37,12 @@ public class ApplicationReqDto {
     private final String detailAddress;
 
     @NotBlank(message = "사업자 등록 번호는 필수입니다.")
+    @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{5}$", message = "사업자등록번호는 000-00-00000 형식으로 입력해주세요.")
     private final String businessRegistrationNumber;
 
     //Todo 필수 여부에 따라 NotBlank 필요
+    @NotBlank(message = "농업경영체등록번호는 필수입니다.")
+    @Pattern(regexp = "^\\d{1}-\\d{3}-\\d{3}-\\d{3}$", message = "농업경영체등록번호는 0-000-000-000 형식으로 입력해주세요.")
     private final String agriRegistrationNumber; // 농업경영체번호
 
     @NotBlank(message = "주요 품목은 필수입니다.")
@@ -91,4 +94,7 @@ public class ApplicationReqDto {
     @NotNull(message = "동의 여부는 필수입니다.")
     @AssertTrue(message = "개인정보 수집 및 이용에 동의해야 지원이 가능합니다.")
     private final Boolean agreement;
+
+    @Pattern(regexp = "^(http(s)?://.+)?$", message = "올바른 URL 형식이 아닙니다.")
+    private final String storeLink;
 }
