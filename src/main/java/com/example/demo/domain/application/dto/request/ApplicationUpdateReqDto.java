@@ -25,8 +25,8 @@ public class ApplicationUpdateReqDto {
     @NotBlank(message = "성별은 필수입니다.")
     private final String gender;
 
-    @NotBlank(message = "농장명은 필수입니다.")
-    private final String farmName;
+    @NotBlank(message = "사업자명은 필수입니다.")
+    private final String businessName;
 
     @NotBlank(message = "우편번호는 필수입니다.")
     private final String zipcode;
@@ -37,8 +37,11 @@ public class ApplicationUpdateReqDto {
     private final String detailAddress;
 
     @NotBlank(message = "사업자 등록 번호는 필수입니다.")
+    @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{5}$", message = "사업자등록번호는 000-00-00000 형식으로 입력해주세요.")
     private final String businessRegistrationNumber;
 
+    @NotBlank(message = "농업경영체등록번호는 필수입니다.")
+    @Pattern(regexp = "^\\d{1}-\\d{3}-\\d{3}-\\d{3}$", message = "농업경영체등록번호는 0-000-000-000 형식으로 입력해주세요.")
     private final String agriRegistrationNumber;
 
     @NotBlank(message = "주요 품목은 필수입니다.")
@@ -86,4 +89,7 @@ public class ApplicationUpdateReqDto {
     @NotBlank(message = "지원 동기는 필수입니다.")
     @Size(max = 1000, message = "지원 동기는 1000자 이내여야 합니다.")
     private final String motivation;
+
+    @Pattern(regexp = "^(http(s)?://.+)?$", message = "올바른 URL 형식이 아닙니다.")
+    private final String storeLink;
 }

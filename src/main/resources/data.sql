@@ -21,7 +21,7 @@ INSERT IGNORE INTO admins(id, login_id, admin_name, password, role, created_at, 
 -- ====================================================================
 INSERT IGNORE INTO applications (
     id, user_id, user_name, birth_date, phone_number, gender, application_number,
-    farm_name, zipcode, street_address, detail_address, business_registration_number,
+    business_name, zipcode, street_address, detail_address, business_registration_number,
     agri_registration_number, main_product, annual_sales, online_distribution_experience,
     funding_experience, product_category, shipping_date, funding_desired_date,
     product_name, product_size, selling_price, available_quantity, motivation,
@@ -70,12 +70,8 @@ INSERT IGNORE INTO applications (
 (9, 9, '강동원', '1981-01-18', '010-5678-5678', '남성', '202605200009',
  '새콤딸기농원', '89012', '충남 논산시', '비닐하우스', '777-88-99999', 'AGR-100009', '딸기', 70000000, true, false,
  '과일', '2026-12-31', '2027-01-01', '설향 딸기', '2kg', 32000, 200,
- '딸기 브랜드 온라인 홍보 확대가 필요합니다.', '신규 패키지 및 체험형 콘텐츠 제작을 계획 중입니다.', 'APPROVED', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
+ '딸기 브랜드 온라인 홍보 확대가 필요합니다.', '신규 패키지 및 체험형 콘텐츠 제작을 계획 중입니다.', 'APPROVED', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY));
 
-(10, 10, '유재석', '1972-08-14', '010-1111-5555', '남성', '202605200010',
- '건강한포크', '90123', '경기도 안성시', 'A동', '888-99-00000', 'AGR-100010', '돼지고기', 300000000, true, true,
- '축산', '2026-01-01', '2026-07-01', '한돈 삼겹살 세트', '3kg', 55000, 400,
- '온라인 판매 경쟁력 강화를 위해 신청했습니다.', '축산물 브랜딩 및 홍보 콘텐츠 제작에 활용 예정입니다.', 'APPROVED', DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY));
 
 -- ====================================================================
 -- 3. 선정업체(Project) 데이터 10개 삽입 (sort_order 추가)
@@ -90,7 +86,6 @@ INSERT IGNORE INTO projects (
 (2, 2, '푸른채소농장', '채소', NULL, '스마트팜을 이용한 신선한 상추 재배.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000002', 1, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
 (5, 5, '싱싱벌꿀', '식음료', 'https://example.com/images/honey.jpg', '자연 그대로의 순수 아카시아 벌꿀입니다.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000005', 2, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
 (7, 7, '바른버섯팜', '채소', 'https://example.com/images/mushroom.jpg', '무농약으로 안전하게 키운 표고버섯입니다.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000007', 3, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
-(10, 10, '건강한포크', '축산', 'https://example.com/images/pork.jpg', '엄격하게 관리된 최고급 한돈 삼겹살.', 'BEFORE_PROGRESS', 'https://happybean.naver.com/donations/H000000010', 4, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
 (3, 3, '맑은한우농장', '축산', 'https://example.com/images/beef.jpg', '강원도 횡성 명품 한우 가공 농가입니다.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000003', 1, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
 (6, 6, '황금귤농장', '과일', NULL, '제주 햇살을 가득 머금은 새콤달콤 감귤.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000006', 2, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
 (8, 8, '구수한정미소', '곡물', 'https://example.com/images/rice.jpg', '윤기 흐르고 찰진 최고급 이천 쌀입니다.', 'COMPLETED', 'https://happybean.naver.com/donations/H000000008', 3, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY));

@@ -39,7 +39,7 @@ public class Application extends BaseSoftDeleteEntity {
     @Column(unique = true) // 지원서 번호에 제약 조건 추가하여 동일 번호 생성 방지
     private String applicationNumber;
 
-    private String farmName;
+    private String businessName;
 
     @Embedded
     private Address farmAddress;
@@ -80,13 +80,15 @@ public class Application extends BaseSoftDeleteEntity {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
+    private String storeLink;
+
     @Builder
     private Application(Long id, User user, String userName, LocalDate birthDate, String phoneNumber,
-        String gender, String applicationNumber, String farmName, Address farmAddress,
+        String gender, String applicationNumber, String businessName, Address farmAddress,
         String businessRegistrationNumber, String agriRegistrationNumber, String mainProduct, BigDecimal annualSales,
         Boolean onlineDistributionExperience, Boolean fundingExperience, String productCategory, LocalDate shippingDate,
         LocalDate fundingDesiredDate, String productName, String productSize, BigDecimal sellingPrice,
-        Integer availableQuantity, String motivation, String fundingPlan, ApplicationStatus status) {
+        Integer availableQuantity, String motivation, String fundingPlan, ApplicationStatus status, String storeLink) {
         this.id = id;
         this.user = user;
         this.userName = userName;
@@ -94,7 +96,7 @@ public class Application extends BaseSoftDeleteEntity {
         this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.applicationNumber = applicationNumber;
-        this.farmName = farmName;
+        this.businessName = businessName;
         this.farmAddress = farmAddress;
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.agriRegistrationNumber = agriRegistrationNumber;
@@ -112,6 +114,7 @@ public class Application extends BaseSoftDeleteEntity {
         this.motivation = motivation;
         this.fundingPlan = fundingPlan;
         this.status = status != null ? status : ApplicationStatus.SUBMITTED;
+        this.storeLink = (storeLink != null && storeLink.isBlank()) ? null : storeLink;
     }
 
     public void cancel() {
@@ -138,12 +141,12 @@ public class Application extends BaseSoftDeleteEntity {
     }
 
     public void update(String userName, LocalDate birthDate, String phoneNumber, String gender,
-                       String farmName, Address farmAddress, String businessRegistrationNumber,
+                       String businessName, Address farmAddress, String businessRegistrationNumber,
                        String agriRegistrationNumber, String mainProduct, BigDecimal annualSales,
                        Boolean onlineDistributionExperience, Boolean fundingExperience,
                        String productCategory, LocalDate shippingDate, LocalDate fundingDesiredDate,
                        String productName, String productSize, BigDecimal sellingPrice,
-                       Integer availableQuantity, String motivation, String fundingPlan) {
+                       Integer availableQuantity, String motivation, String fundingPlan, String storeLink) {
 
         if (this.status != ApplicationStatus.SUBMITTED) {
             throw new CustomException(ErrorCode.INVALID_APPLICATION_STATUS);
@@ -153,7 +156,7 @@ public class Application extends BaseSoftDeleteEntity {
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
-        this.farmName = farmName;
+        this.businessName = businessName;
         this.farmAddress = farmAddress;
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.agriRegistrationNumber = agriRegistrationNumber;
@@ -170,6 +173,9 @@ public class Application extends BaseSoftDeleteEntity {
         this.availableQuantity = availableQuantity;
         this.motivation = motivation;
         this.fundingPlan = fundingPlan;
+        if (storeLink != null) {
+            this.storeLink = storeLink.isBlank() ? null : storeLink;
+        }
     }
 }
 

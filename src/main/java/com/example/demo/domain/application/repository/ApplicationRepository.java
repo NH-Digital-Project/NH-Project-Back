@@ -13,7 +13,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Optional<Application> findTopByApplicationNumberStartingWithOrderByApplicationNumberDesc(
         String today);
 
-    Page<Application> findByUserNameContainingOrFarmNameContaining(String userName, String farmName,
+    Page<Application> findByUserNameContainingOrBusinessNameContaining(String userName, String businessName,
         Pageable pageable);
 
     // 유저의 유효한(삭제되지 않은) 지원서 존재 여부 확인으로 변경
