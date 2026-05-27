@@ -1,6 +1,7 @@
 package com.example.demo.domain.application.service;
 
 import com.example.demo.domain.application.dto.request.ApplicationReqDto;
+import com.example.demo.domain.application.dto.request.ApplicationUpdateReqDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.domain.application.dto.response.ApplicationStatusResDto;
 import com.example.demo.domain.application.dto.response.CreateApplicationResDto;
@@ -167,5 +168,44 @@ public class ApplicationService {
         if(now.isBefore(startTime) || now.isAfter(endTime.minusHours(1))) {
             throw new CustomException(ErrorCode.INVALID_CANCEL_PERIOD);
         }
+    }
+
+    @Transactional
+    public void updateMyApplication(Long userId, ApplicationUpdateReqDto request) {
+        // 사업 신청 기간 검증
+        validateApplicationPeriod();
+
+        Application application = applicationRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        Address address = new Address(
+                request.getZipcode(),
+                request.getStreetAddress(),
+                request.getDetailAddress()
+        );
+
+        application.update(
+                request.getUserName(),
+                request.getBirthDate(),
+                request.getPhoneNumber(),
+                request.getGender(),
+                request.getFarmName(),
+                address,
+                request.getBusinessRegistrationNumber(),
+                request.getAgriRegistrationNumber(),
+                request.getMainProduct(),
+                request.getAnnualSales(),
+                request.getOnlineDistributionExperience(),
+                request.getFundingExperience(),
+                request.getProductCategory(),
+                request.getShippingDate(),
+                request.getFundingDesiredDate(),
+                request.getProductName(),
+                request.getProductSize(),
+                request.getSellingPrice(),
+                request.getAvailableQuantity(),
+                request.getMotivation(),
+                request.getFundingPlan()
+        );
     }
 }
