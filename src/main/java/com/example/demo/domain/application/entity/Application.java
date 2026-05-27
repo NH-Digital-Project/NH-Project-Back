@@ -136,5 +136,40 @@ public class Application extends BaseSoftDeleteEntity {
     public void submit() {
         this.status = ApplicationStatus.SUBMITTED;
     }
+
+    public void update(String userName, LocalDate birthDate, String phoneNumber, String gender,
+                       String farmName, Address farmAddress, String businessRegistrationNumber,
+                       String agriRegistrationNumber, String mainProduct, BigDecimal annualSales,
+                       Boolean onlineDistributionExperience, Boolean fundingExperience,
+                       String productCategory, LocalDate shippingDate, LocalDate fundingDesiredDate,
+                       String productName, String productSize, BigDecimal sellingPrice,
+                       Integer availableQuantity, String motivation, String fundingPlan) {
+
+        if (this.status != ApplicationStatus.SUBMITTED) {
+            throw new CustomException(ErrorCode.INVALID_APPLICATION_STATUS);
+        }
+
+        this.userName = userName;
+        this.birthDate = birthDate;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.farmName = farmName;
+        this.farmAddress = farmAddress;
+        this.businessRegistrationNumber = businessRegistrationNumber;
+        this.agriRegistrationNumber = agriRegistrationNumber;
+        this.mainProduct = mainProduct;
+        this.annualSales = annualSales;
+        this.onlineDistributionExperience = onlineDistributionExperience;
+        this.fundingExperience = fundingExperience;
+        this.productCategory = productCategory;
+        this.shippingDate = shippingDate;
+        this.fundingDesiredDate = fundingDesiredDate;
+        this.productName = productName;
+        this.productSize = productSize;
+        this.sellingPrice = sellingPrice;
+        this.availableQuantity = availableQuantity;
+        this.motivation = motivation;
+        this.fundingPlan = fundingPlan;
+    }
 }
 
