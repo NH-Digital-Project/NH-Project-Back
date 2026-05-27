@@ -14,7 +14,7 @@ public class ApplicationSummaryDto {
     private final String applicationNumber;
     private final LocalDateTime createdAt;
     private final String userName;
-    private final String farmName;
+    private final String businessName;
     private final String productCategory;
     private final ApplicationStatus status;
     private final LocalDateTime deletedAt;
@@ -25,7 +25,7 @@ public class ApplicationSummaryDto {
                    .applicationNumber(application.getApplicationNumber())
                    .createdAt(application.getCreatedAt())
                    .userName(application.getUserName())
-                   .farmName(application.getFarmName())
+                   .businessName(application.getBusinessName())
                    .productCategory(application.getProductCategory())
                    .status(application.getStatus())
                 .deletedAt(application.getDeletedAt())

@@ -22,7 +22,7 @@ public class ApplicationResDto {
     private final LocalDate birthDate;
 
     private final String phoneNumber;
-    private final String farmName;
+    private final String businessName;
 
     // 카카오 주소 정보
     private final String zipcode;
@@ -57,7 +57,7 @@ public class ApplicationResDto {
                 .birthDate(application.getBirthDate())
                 .gender(application.getGender())
                 .phoneNumber(application.getPhoneNumber())
-                .farmName(application.getFarmName())
+                .businessName(application.getBusinessName())
                 .zipcode(address != null ? address.getZipcode() : null)
                 .streetAddress(address != null ? address.getStreetAddress() : null)
                 .detailAddress(address != null ? address.getDetailAddress() : null)

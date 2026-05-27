@@ -67,7 +67,7 @@ public class ApplicationService {
                 .phoneNumber(request.getPhoneNumber())
                 .gender(request.getGender())
                 .applicationNumber(generateApplicationNumber())
-                .farmName(request.getFarmName())
+                .businessName(request.getBusinessName())
                 .farmAddress(address)
                 .businessRegistrationNumber(request.getBusinessRegistrationNumber())
                 .agriRegistrationNumber(request.getAgriRegistrationNumber())
@@ -189,7 +189,7 @@ public class ApplicationService {
                 request.getBirthDate(),
                 request.getPhoneNumber(),
                 request.getGender(),
-                request.getFarmName(),
+                request.getBusinessName(),
                 address,
                 request.getBusinessRegistrationNumber(),
                 request.getAgriRegistrationNumber(),

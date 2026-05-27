@@ -16,7 +16,7 @@ public class ApplicationStatusResDto {
     private final String applicationNumber;
     private final ApplicationStatus status;
     private final String name;
-    private final String farmName;
+    private final String businessName;
     private final String mainProduct;
     private final LocalDateTime createdAt;
 
@@ -26,7 +26,7 @@ public class ApplicationStatusResDto {
                 .applicationNumber(application.getApplicationNumber())
                 .status(application.getStatus())
                 .name(application.getUserName())
-                .farmName(application.getFarmName())
+                .businessName(application.getBusinessName())
                 .mainProduct(application.getMainProduct())
                 .createdAt(application.getCreatedAt())
                 .build();
