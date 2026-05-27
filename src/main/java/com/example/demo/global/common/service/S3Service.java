@@ -1,14 +1,14 @@
 package com.example.demo.global.common.service;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.example.demo.global.exception.CustomException;
-import com.example.demo.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -17,7 +17,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3Service {
 
-    private final AmazonS3 amazonS3;
+    // v2의 S3Client 주입
+    private final S3Client s3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -29,18 +30,31 @@ public class S3Service {
         }
 
         String originalFilename = file.getOriginalFilename();
-        String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String storeFileName = "images/" + UUID.randomUUID().toString() + ext; // images/ 경로 추가
+        String ext = "";
+        if (originalFilename != null) {
+            int dotIndex = originalFilename.lastIndexOf(".");
+            if (dotIndex != -1) {
+                ext = originalFilename.substring(dotIndex);
+            }
+        }
+        String storeFileName = "images/" + UUID.randomUUID().toString() + ext;
 
         try {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(file.getSize());
-            metadata.setContentType(file.getContentType());
+            // v2 빌더 패턴을 이용한 업로드 객체 생성
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(storeFileName)
+                    .contentType(file.getContentType())
+                    .build();
 
-            amazonS3.putObject(new PutObjectRequest(bucket, storeFileName, file.getInputStream(), metadata));
-            return amazonS3.getUrl(bucket, storeFileName).toString();
+            // RequestBody 형식을 통해 인풋 스트림 전달
+            s3Client.putObject(putObjectRequest,
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+            // v2 표준 엔드포인트 URL 추출 방식 적용
+            return s3Client.utilities().getUrl(builder -> builder.bucket(bucket).key(storeFileName)).toString();
         } catch (IOException e) {
-            throw new CustomException(ErrorCode.INTERNAL_ERROR);
+            throw new com.example.demo.global.exception.CustomException(com.example.demo.global.exception.ErrorCode.INTERNAL_ERROR);
         }
     }
 
@@ -50,10 +64,19 @@ public class S3Service {
             return;
         }
         try {
-            // URL 형태에서 "images/파일명.확장자" 부분(Key)만 추출
             String splitStr = ".com/";
-            String fileName = fileUrl.substring(fileUrl.lastIndexOf(splitStr) + splitStr.length());
-            amazonS3.deleteObject(bucket, fileName);
+            int index = fileUrl.lastIndexOf(splitStr);
+            if (index != -1) {
+                String fileName = fileUrl.substring(index + splitStr.length());
+
+                // v2 빌더 패턴을 이용한 삭제 요청
+                DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucket)
+                        .key(fileName)
+                        .build();
+
+                s3Client.deleteObject(deleteObjectRequest);
+            }
         } catch (Exception e) {
             // 삭제 실패 예외 처리 로직 생략
         }
