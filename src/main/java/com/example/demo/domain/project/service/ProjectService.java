@@ -80,10 +80,15 @@ public class ProjectService {
         // 이미지가 새로 들어왔다면 기존 이미지 삭제 후 새 이미지 업로드
         String imageUrl = project.getThumbnailImageUrl();
         if (thumbnail != null && !thumbnail.isEmpty()) {
+            String newImageUrl = s3Service.uploadFile(thumbnail);
+
+            // 기존에 등록되어 있던 이미지가 있다면 S3에서 삭제
             if (imageUrl != null) {
                 s3Service.deleteFile(imageUrl);
             }
-            imageUrl = s3Service.uploadFile(thumbnail);
+
+            // 엔티티에 넘겨줄 주소를 새 S3 주소로 교체
+            imageUrl = newImageUrl;
         }
 
         project.update(
@@ -124,12 +129,13 @@ public class ProjectService {
             project.getApplication().submit();
         }
 
-        // S3 파일도 함께 삭제
+        projectRepository.delete(project);
+        projectRepository.flush(); // DB에서 삭제 및 제약조건 위반 검증을 먼저 수행
+
+        // DB 삭제가 완전히 성공한 이후에 S3 파일을 삭제
         if (project.getThumbnailImageUrl() != null) {
             s3Service.deleteFile(project.getThumbnailImageUrl());
         }
-
-        projectRepository.delete(project);
     }
 
     // 드래그 앤 드롭 다중 순서 업데이트 로직
