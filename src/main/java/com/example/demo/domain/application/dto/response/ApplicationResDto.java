@@ -47,6 +47,7 @@ public class ApplicationResDto {
     private final String motivation; // 지원동기
     private final String fundingPlan;
     private final LocalDateTime createdAt;
+    private final String storeLink;
 
     public static ApplicationResDto from(Application application) {
         Address address = application.getFarmAddress();
@@ -77,6 +78,7 @@ public class ApplicationResDto {
                 .motivation(application.getMotivation())
                 .fundingPlan(application.getFundingPlan())
                 .createdAt(application.getCreatedAt())
+                .storeLink(application.getStoreLink())
                 .build();
     }
 }

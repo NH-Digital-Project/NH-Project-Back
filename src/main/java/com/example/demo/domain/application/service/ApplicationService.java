@@ -85,6 +85,7 @@ public class ApplicationService {
                 .motivation(request.getMotivation())
                 .fundingPlan(request.getFundingPlan())
                 .status(ApplicationStatus.SUBMITTED)
+                .storeLink(request.getStoreLink())
                 .build();
 
         try {
@@ -205,7 +206,8 @@ public class ApplicationService {
                 request.getSellingPrice(),
                 request.getAvailableQuantity(),
                 request.getMotivation(),
-                request.getFundingPlan()
+                request.getFundingPlan(),
+                request.getStoreLink()
         );
     }
 }

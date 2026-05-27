@@ -80,13 +80,15 @@ public class Application extends BaseSoftDeleteEntity {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
+    private String storeLink;
+
     @Builder
     private Application(Long id, User user, String userName, LocalDate birthDate, String phoneNumber,
         String gender, String applicationNumber, String businessName, Address farmAddress,
         String businessRegistrationNumber, String agriRegistrationNumber, String mainProduct, BigDecimal annualSales,
         Boolean onlineDistributionExperience, Boolean fundingExperience, String productCategory, LocalDate shippingDate,
         LocalDate fundingDesiredDate, String productName, String productSize, BigDecimal sellingPrice,
-        Integer availableQuantity, String motivation, String fundingPlan, ApplicationStatus status) {
+        Integer availableQuantity, String motivation, String fundingPlan, ApplicationStatus status, String storeLink) {
         this.id = id;
         this.user = user;
         this.userName = userName;
@@ -112,6 +114,7 @@ public class Application extends BaseSoftDeleteEntity {
         this.motivation = motivation;
         this.fundingPlan = fundingPlan;
         this.status = status != null ? status : ApplicationStatus.SUBMITTED;
+        this.storeLink = (storeLink != null && storeLink.isBlank()) ? null : storeLink;
     }
 
     public void cancel() {
@@ -143,7 +146,7 @@ public class Application extends BaseSoftDeleteEntity {
                        Boolean onlineDistributionExperience, Boolean fundingExperience,
                        String productCategory, LocalDate shippingDate, LocalDate fundingDesiredDate,
                        String productName, String productSize, BigDecimal sellingPrice,
-                       Integer availableQuantity, String motivation, String fundingPlan) {
+                       Integer availableQuantity, String motivation, String fundingPlan, String storeLink) {
 
         if (this.status != ApplicationStatus.SUBMITTED) {
             throw new CustomException(ErrorCode.INVALID_APPLICATION_STATUS);
@@ -170,6 +173,9 @@ public class Application extends BaseSoftDeleteEntity {
         this.availableQuantity = availableQuantity;
         this.motivation = motivation;
         this.fundingPlan = fundingPlan;
+        if (storeLink != null) {
+            this.storeLink = storeLink.isBlank() ? null : storeLink;
+        }
     }
 }
 
