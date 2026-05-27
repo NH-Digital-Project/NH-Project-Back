@@ -11,9 +11,11 @@ import com.example.demo.global.security.PrincipalDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,23 +23,25 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
     private final ProjectService projectService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<String>> createProject(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @Valid @RequestBody ProjectCreateReqDto request
+            @Valid @RequestPart(value = "request") ProjectCreateReqDto request,
+            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
     ) {
-        projectService.createProject(principalDetails.getUserId(), request);
+        projectService.createProject(principalDetails.getUserId(), request, thumbnail);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.successWithMessage("선정업체가 등록되었습니다."));
     }
 
-    @PatchMapping("/{projectId}")
+    @PatchMapping(value = "/{projectId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<String>> updateProject(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long projectId,
-            @Valid @RequestBody ProjectUpdateReqDto request
+            @Valid @RequestPart(value = "request") ProjectUpdateReqDto request,
+            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
     ) {
-        projectService.updateProject(principalDetails.getUserId(), projectId, request);
+        projectService.updateProject(principalDetails.getUserId(), projectId, request, thumbnail);
         return ResponseEntity.ok(ApiResponse.successWithMessage("정보가 수정되었습니다."));
     }
 
