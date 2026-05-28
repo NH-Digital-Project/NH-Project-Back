@@ -10,14 +10,14 @@ import lombok.Getter;
 public class UserSummaryDto {
     private final LocalDateTime createdAt;
     private final String userName;
-    private final String email;
+    private final String phoneNumber;
     private final Boolean applied;
 
     public static UserSummaryDto from(User user){
         return UserSummaryDto.builder()
                    .createdAt(user.getCreatedAt())
                    .userName(user.getUserName())
-                   .email(user.getEmail())
+                   .phoneNumber(user.getPhoneNumber())
                    .applied(user.getApplied())
                    .build();
     }

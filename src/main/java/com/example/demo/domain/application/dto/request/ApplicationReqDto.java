@@ -95,6 +95,5 @@ public class ApplicationReqDto {
     @AssertTrue(message = "개인정보 수집 및 이용에 동의해야 지원이 가능합니다.")
     private final Boolean agreement;
 
-    @Pattern(regexp = "^(http(s)?://.+)?$", message = "올바른 URL 형식이 아닙니다.")
     private final String storeLink;
 }

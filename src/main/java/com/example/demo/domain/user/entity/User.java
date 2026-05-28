@@ -28,17 +28,15 @@ public class User extends BaseSoftDeleteEntity {
 
     private String userName;
 
-    private String email;
+    private String phoneNumber;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
     private Boolean applied;
 
-    private User(String oauthId, String userName, String email, Role role, Boolean applied) {
+    private User(String oauthId, Role role, Boolean applied) {
         this.oauthId = oauthId;
-        this.userName = userName;
-        this.email = email;
         this.role = role;
         this.applied = applied;
     }
@@ -47,7 +45,15 @@ public class User extends BaseSoftDeleteEntity {
         this.delete();
     }
 
-    public static User createUser(String oauthId, String userName, String email) {
-        return new User(oauthId, userName, email, Role.ROLE_USER, false);
+    public static User createUser(String oauthId) {
+        return new User(oauthId, Role.ROLE_USER, false);
+    }
+
+    public void updateUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
