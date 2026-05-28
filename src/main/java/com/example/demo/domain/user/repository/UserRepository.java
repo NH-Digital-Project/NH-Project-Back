@@ -10,5 +10,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByOauthId(String oauthId);
 
-    Page<User> findByUserNameContainingOrEmailContaining(String userName, String email, Pageable pageable);
+    Page<User> findByUserNameContaining(String userName, String email, Pageable pageable);
 }
