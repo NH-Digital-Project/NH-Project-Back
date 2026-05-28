@@ -49,11 +49,11 @@ public class SecurityConfig {
                 )
             )
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/", "/oauth2/**", "/login/oauth2/code/**").permitAll()
-                    .requestMatchers("/api/v1/admin/login").permitAll()
-                    .requestMatchers("/api/v1/applications/**", "/api/v1/me/**").hasRole("USER")
-                    .requestMatchers(HttpMethod.GET, "/api/v1/projects/**").permitAll()
-                    .requestMatchers("/api/v1/admin/**", "/api/v1/projects/**").hasRole("ADMIN")
+                .requestMatchers("/", "/oauth2/**", "/login/oauth2/code/**").permitAll()
+                .requestMatchers("/api/v1/admin/login").permitAll()
+                .requestMatchers("/api/v1/applications/**", "/api/v1/me/**").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/api/v1/projects/**").permitAll()
+                .requestMatchers("/api/v1/admin/**", "/api/v1/projects/**").hasRole("ADMIN")
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
@@ -75,7 +75,7 @@ public class SecurityConfig {
         // 허용할 HTTP 메서드 설정
         configuration.setAllowedMethods(
             List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(),
-                HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name()));
+                HttpMethod.PATCH.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name()));
 
         // 허용할 헤더 설정
         configuration.setAllowedHeaders(

@@ -3,16 +3,17 @@ package com.example.demo.domain.user.dto.response;
 import com.example.demo.domain.user.entity.User;
 import java.time.LocalDateTime;
 
-public record MyInfoResponse (
+public record MyInfoResponse(
     Long userId,
-    String email,
+    String oauthId,
     String userName,
+    String phoneNumber,
     LocalDateTime createdAt
 ) {
 
     public static MyInfoResponse from(User user) {
-        return new MyInfoResponse(user.getId(), user.getEmail(), user.getUserName(),
-            user.getCreatedAt());
+        return new MyInfoResponse(user.getId(), user.getOauthId(), user.getUserName(),
+            user.getPhoneNumber(), user.getCreatedAt());
     }
 
 }

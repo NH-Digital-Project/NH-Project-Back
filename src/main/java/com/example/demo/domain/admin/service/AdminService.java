@@ -166,6 +166,6 @@ public class AdminService {
             return userRepository.findAll(pageable);
         }
 
-        return userRepository.findByUserNameContainingOrEmailContaining(keyword, keyword, pageable);
+        return userRepository.findByUserNameContaining(keyword, keyword, pageable);
     }
 }

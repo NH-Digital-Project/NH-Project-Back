@@ -1,17 +1,17 @@
 -- ====================================================================
 -- 1. 사용자(User) 데이터 10개 삽입
 -- ====================================================================
-INSERT IGNORE INTO users (id, oauth_id, user_name, email, role, applied, created_at, updated_at) VALUES
-(1, 'naver_user_001', '김철수', 'chulsoo@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(2, 'naver_user_002', '이영희', 'younghee@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(3, 'naver_user_003', '박민수', 'minsoo@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(4, 'naver_user_004', '최지우', 'jiwoo@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(5, 'naver_user_005', '정우성', 'woosung@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(6, 'naver_user_006', '한지민', 'jimin@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(7, 'naver_user_007', '이정재', 'jungjae@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(8, 'naver_user_008', '송혜교', 'hyekyo@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(9, 'naver_user_009', '강동원', 'dongwon@example.com', 'ROLE_USER', false, NOW(), NOW()),
-(10, 'naver_user_010', '유재석', 'jaeseok@example.com', 'ROLE_USER', false, NOW(), NOW());
+INSERT IGNORE INTO users (id, oauth_id, user_name, phone_number, role, applied, created_at, updated_at) VALUES
+(1, 'naver_user_001', '김철수', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(2, 'naver_user_002', '이영희', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(3, 'naver_user_003', '박민수', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(4, 'naver_user_004', '최지우', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(5, 'naver_user_005', '정우성', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(6, 'naver_user_006', '한지민', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(7, 'naver_user_007', '이정재', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(8, 'naver_user_008', '송혜교', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(9, 'naver_user_009', '강동원', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
+(10, 'naver_user_010', '유재석', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW());
 
 INSERT IGNORE INTO admins(id, login_id, admin_name, password, role, created_at, updated_at) VALUES
 (1, 'test', '최유림', '$2b$12$SYwFjnQ9RoY6SCPEFnbFMeJmFB1oRN3BLc/qJcU8P1Oz5qyfIUffS', 'ROLE_ADMIN', NOW(), NOW());
