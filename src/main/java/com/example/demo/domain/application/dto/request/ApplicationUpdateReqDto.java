@@ -90,6 +90,5 @@ public class ApplicationUpdateReqDto {
     @Size(max = 1000, message = "지원 동기는 1000자 이내여야 합니다.")
     private final String motivation;
 
-    @Pattern(regexp = "^(http(s)?://.+)?$", message = "올바른 URL 형식이 아닙니다.")
     private final String storeLink;
 }
