@@ -45,7 +45,7 @@ public class User extends BaseSoftDeleteEntity {
         this.delete();
     }
 
-    public static User createUser(String oauthId, String userName, String email) {
-        return new User(oauthId, userName, email, Role.ROLE_USER, false);
+    public static User createUser(String oauthId) {
+        return new User(oauthId, Role.ROLE_USER, false);
     }
 }
