@@ -48,4 +48,12 @@ public class User extends BaseSoftDeleteEntity {
     public static User createUser(String oauthId) {
         return new User(oauthId, Role.ROLE_USER, false);
     }
+
+    public void updateUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }
