@@ -1,17 +1,17 @@
 -- ====================================================================
 -- 1. 사용자(User) 데이터 10개 삽입
 -- ====================================================================
-INSERT IGNORE INTO users (id, oauth_id, user_name, phone_number, role, applied, created_at, updated_at) VALUES
-(1, 'naver_user_001', '김철수', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(2, 'naver_user_002', '이영희', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(3, 'naver_user_003', '박민수', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(4, 'naver_user_004', '최지우', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(5, 'naver_user_005', '정우성', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(6, 'naver_user_006', '한지민', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(7, 'naver_user_007', '이정재', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(8, 'naver_user_008', '송혜교', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(9, 'naver_user_009', '강동원', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW()),
-(10, 'naver_user_010', '유재석', '010-1234-5678', 'ROLE_USER', false, NOW(), NOW());
+INSERT IGNORE INTO users (id, oauth_id, user_name, phone_number, role, created_at, updated_at) VALUES
+(1, 'naver_user_001', '김철수', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(2, 'naver_user_002', '이영희', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(3, 'naver_user_003', '박민수', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(4, 'naver_user_004', '최지우', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(5, 'naver_user_005', '정우성', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(6, 'naver_user_006', '한지민', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(7, 'naver_user_007', '이정재', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(8, 'naver_user_008', '송혜교', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(9, 'naver_user_009', '강동원', '010-1234-5678', 'ROLE_USER', NOW(), NOW()),
+(10, 'naver_user_010', '유재석', '010-1234-5678', 'ROLE_USER', NOW(), NOW());
 
 INSERT IGNORE INTO admins(id, login_id, admin_name, password, role, created_at, updated_at) VALUES
 (1, 'test', '최유림', '$2b$12$SYwFjnQ9RoY6SCPEFnbFMeJmFB1oRN3BLc/qJcU8P1Oz5qyfIUffS', 'ROLE_ADMIN', NOW(), NOW());
@@ -81,7 +81,7 @@ INSERT IGNORE INTO applications (
 -- 3. 선정업체(Project) 데이터 10개 삽입 (sort_order 추가)
 -- ====================================================================
 INSERT IGNORE INTO projects (
-    id, application_id, farm_name, product_category, thumbnail_image_url,
+    id, application_id, business_name, product_category, thumbnail_image_url,
     description, project_status, happy_bean_url, sort_order, created_at, updated_at
 ) VALUES
 (1, 1, '행복농장', '과일', 'https://example.com/images/apple.jpg', '친환경 사과 재배 농가입니다.', 'IN_PROGRESS', 'https://happybean.naver.com/donations/H000000001', 1, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
