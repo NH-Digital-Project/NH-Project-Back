@@ -15,10 +15,7 @@ public class UserListResDto {
     private final Integer totalPages;
     private final List<UserSummaryDto> users;
 
-    public static UserListResDto from(Page<User> users){
-        List<UserSummaryDto> userDtos = users.stream()
-                                            .map(UserSummaryDto::from)
-                                            .toList();
+    public static UserListResDto of(Page<User> users, List<UserSummaryDto> userDtos){
 
         return UserListResDto.builder()
                    .currentPage(users.getNumber() + 1)
