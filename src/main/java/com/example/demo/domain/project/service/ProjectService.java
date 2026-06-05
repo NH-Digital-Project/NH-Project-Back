@@ -58,7 +58,7 @@ public class ProjectService {
 
         Project project = Project.builder()
                 .application(application)
-                .farmName(request.getFarmName())
+                .businessName(request.getBusinessName())
                 .productCategory(request.getProductCategory())
                 .thumbnailImageUrl(s3ImageUrl)
                 .description(request.getDescription())
@@ -92,7 +92,7 @@ public class ProjectService {
         }
 
         project.update(
-                request.getFarmName(),
+                request.getBusinessName(),
                 request.getProductCategory(),
                 imageUrl, // 새로 갱신된 URL 전달
                 request.getDescription(),

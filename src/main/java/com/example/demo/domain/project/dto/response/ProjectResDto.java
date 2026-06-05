@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProjectResDto {
     private final Long projectId;
-    private final String farmName;
+    private final String businessName;
     private final String productCategory;
     private final String description;
     private final ProjectStatus status;
@@ -21,7 +21,7 @@ public class ProjectResDto {
     public static ProjectResDto from(Project project) {
         return ProjectResDto.builder()
                 .projectId(project.getId())
-                .farmName(project.getFarmName())
+                .businessName(project.getBusinessName())
                 .productCategory(project.getProductCategory())
                 .description(project.getDescription())
                 .status(project.getProjectStatus())
