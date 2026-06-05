@@ -8,10 +8,12 @@ import com.example.demo.domain.admin.dto.response.AdminLoginResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.service.AdminService;
+import com.example.demo.domain.application.dto.response.ApplicationOptionDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.global.common.dto.ApiResponse;
 import com.example.demo.global.security.PrincipalDetails;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -42,7 +44,8 @@ public class AdminController {
         @Valid @RequestBody AdminCreateReqDto createReqDto
     ) {
 
-        return ResponseEntity.ok(ApiResponse.success(adminService.createAdmin(principalDetails.getUserId(),createReqDto)));
+        return ResponseEntity.ok(ApiResponse.success(
+            adminService.createAdmin(principalDetails.getUserId(), createReqDto)));
 
 
     }
@@ -99,5 +102,12 @@ public class AdminController {
     PrincipalDetails principalDetails) {
         return ResponseEntity.ok(ApiResponse.success(
             adminService.getApplication(principalDetails.getUserId(), applicationId)));
+    }
+
+    @GetMapping("/applications/submitted-options")
+    public ResponseEntity<ApiResponse<List<ApplicationOptionDto>>> getSubmittedApplicationOptions(
+        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return ResponseEntity.ok(ApiResponse.success(
+            adminService.getSubmittedApplicationOptions(principalDetails.getUserId())));
     }
 }
