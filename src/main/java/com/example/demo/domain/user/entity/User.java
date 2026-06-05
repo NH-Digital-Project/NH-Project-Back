@@ -33,12 +33,10 @@ public class User extends BaseSoftDeleteEntity {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    private Boolean applied;
 
-    private User(String oauthId, Role role, Boolean applied) {
+    private User(String oauthId, Role role) {
         this.oauthId = oauthId;
         this.role = role;
-        this.applied = applied;
     }
 
     public void withdraw() {
@@ -46,7 +44,7 @@ public class User extends BaseSoftDeleteEntity {
     }
 
     public static User createUser(String oauthId) {
-        return new User(oauthId, Role.ROLE_USER, false);
+        return new User(oauthId, Role.ROLE_USER);
     }
 
     public void updateUserName(String userName) {
