@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class ProjectUpdateReqDto {
 
     // 빈 문자열, 공백 입력을 차단하기 위해 @Pattern 추가
-    @Pattern(regexp = ".*\\S.*", message = "농장명은 공백만으로 비워둘 수 없습니다.")
-    private String farmName;
+    @Pattern(regexp = ".*\\S.*", message = "사업자명은 공백만으로 비워둘 수 없습니다.")
+    private String businessName;
 
     @Pattern(regexp = ".*\\S.*", message = "품목은 공백만으로 비워둘 수 없습니다.")
     private String productCategory;

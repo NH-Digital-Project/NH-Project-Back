@@ -14,8 +14,8 @@ public class ProjectCreateReqDto {
     @NotNull(message = "지원서 ID는 필수입니다.")
     private final Long applicationId;
 
-    @NotBlank(message = "농장명은 필수입니다.")
-    private final String farmName;
+    @NotBlank(message = "사업자명은 필수입니다.")
+    private final String businessName;
 
     @NotBlank(message = "품목은 필수입니다.")
     private final String productCategory;
