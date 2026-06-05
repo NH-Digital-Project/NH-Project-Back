@@ -150,11 +150,17 @@ public class AdminService {
             userPage = findUsers(keyword, pageable);
         }
 
+        // 조회된 유저들의 id만 추출
+        List<Long> userIds = userPage.getContent().stream()
+                .map(User::getId)
+                .toList();
+
+        // 해당 유저들 중 지원서가 있는 유저 id만 조회
+        List<Long> appliedUserIds = applicationRepository.findUserIdsByUserIdInAndStatusNot(userIds, ApplicationStatus.CANCELED);
+
+        // 조회한 id 목록에 포함되어 있는지 확인하여 true/false 매핑
         List<UserSummaryDto> summaryDtos = userPage.getContent().stream()
-                .map(user -> {
-                    boolean hasApplied = applicationRepository.existsByUserIdAndStatusNot(user.getId(), ApplicationStatus.CANCELED);
-                    return UserSummaryDto.from(user, hasApplied);
-                })
+                .map(user -> UserSummaryDto.from(user, appliedUserIds.contains(user.getId())))
                 .toList();
 
         return UserListResDto.of(userPage, summaryDtos);

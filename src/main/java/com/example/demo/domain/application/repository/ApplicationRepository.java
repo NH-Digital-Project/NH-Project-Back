@@ -5,7 +5,10 @@ import com.example.demo.domain.application.status.ApplicationStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
@@ -23,6 +26,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     // 유저의 유효한(삭제되지 않은) 지원서 조회로 변경
     Optional<Application> findByUserIdAndDeletedAtIsNull(Long userId);
 
-    // 특정 유저의 지원서 중 CANCELED 상태가 아닌 지원서가 존재하는지 확인
-    boolean existsByUserIdAndStatusNot(Long userId, ApplicationStatus status);
+    // 여러 유저 ID를 한 번에 조회하여 CANCELED 상태가 아닌 지원서가 존재하는 유저 ID 목록 반환
+    @Query("SELECT a.user.id FROM Application a WHERE a.user.id IN :userIds AND a.status <> :status")
+    List<Long> findUserIdsByUserIdInAndStatusNot(@Param("userIds") List<Long> userIds, @Param("status") ApplicationStatus status);
 }
