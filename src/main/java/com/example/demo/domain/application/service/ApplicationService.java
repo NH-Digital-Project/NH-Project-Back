@@ -2,6 +2,7 @@ package com.example.demo.domain.application.service;
 
 import com.example.demo.domain.application.dto.request.ApplicationReqDto;
 import com.example.demo.domain.application.dto.request.ApplicationUpdateReqDto;
+import com.example.demo.domain.application.dto.response.ApplicationOptionDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.domain.application.dto.response.ApplicationStatusResDto;
 import com.example.demo.domain.application.dto.response.CreateApplicationResDto;
@@ -13,6 +14,7 @@ import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -209,5 +211,10 @@ public class ApplicationService {
                 request.getFundingPlan(),
                 request.getStoreLink()
         );
+    }
+
+    public List<ApplicationOptionDto> getSubmittedApplicationOptions() {
+        return applicationRepository.findByStatus(ApplicationStatus.SUBMITTED).stream()
+            .map(ApplicationOptionDto::from).toList();
     }
 }

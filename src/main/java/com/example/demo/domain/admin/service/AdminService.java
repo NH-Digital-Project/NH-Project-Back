@@ -5,6 +5,7 @@ import com.example.demo.domain.admin.dto.request.AdminLoginReqDto;
 import com.example.demo.domain.admin.dto.response.*;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
+import com.example.demo.domain.application.dto.response.ApplicationOptionDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
@@ -169,6 +170,11 @@ public class AdminService {
     public ApplicationResDto getApplication(Long adminId, Long applicationId) {
         validateAdminId(adminId);
         return applicationService.getApplication(applicationId);
+    }
+
+    public List<ApplicationOptionDto> getSubmittedApplicationOptions(Long adminId) {
+        validateAdminId(adminId);
+        return applicationService.getSubmittedApplicationOptions();
     }
 
     private Page<User> findUsers(String keyword , Pageable pageable){
