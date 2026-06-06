@@ -40,7 +40,6 @@ public class ApplicationReqDto {
     @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{5}$", message = "사업자등록번호는 000-00-00000 형식으로 입력해주세요.")
     private final String businessRegistrationNumber;
 
-    //Todo 필수 여부에 따라 NotBlank 필요
     @NotBlank(message = "농업경영체등록번호는 필수입니다.")
     @Pattern(regexp = "^\\d{1}-\\d{3}-\\d{3}-\\d{3}$", message = "농업경영체등록번호는 0-000-000-000 형식으로 입력해주세요.")
     private final String agriRegistrationNumber; // 농업경영체번호

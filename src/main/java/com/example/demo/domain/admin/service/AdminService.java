@@ -2,17 +2,15 @@ package com.example.demo.domain.admin.service;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
 import com.example.demo.domain.admin.dto.request.AdminLoginReqDto;
-import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
-import com.example.demo.domain.admin.dto.response.AdminListResDto;
-import com.example.demo.domain.admin.dto.response.AdminLoginResDto;
-import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
-import com.example.demo.domain.admin.dto.response.UserListResDto;
+import com.example.demo.domain.admin.dto.response.*;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
+import com.example.demo.domain.application.dto.response.ApplicationOptionDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
 import com.example.demo.domain.application.entity.Application;
 import com.example.demo.domain.application.repository.ApplicationRepository;
 import com.example.demo.domain.application.service.ApplicationService;
+import com.example.demo.domain.application.status.ApplicationStatus;
 import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
@@ -144,7 +142,7 @@ public class AdminService {
         Page<User> userPage = findUsers(keyword, pageable);
 
         if (userPage.getTotalElements() == 0) {
-            return UserListResDto.from(userPage);
+            return UserListResDto.of(userPage, List.of());
         }
 
         if (pageable.getPageNumber() >= userPage.getTotalPages()) {
@@ -153,12 +151,30 @@ public class AdminService {
             userPage = findUsers(keyword, pageable);
         }
 
-        return UserListResDto.from(userPage);
+        // 조회된 유저들의 id만 추출
+        List<Long> userIds = userPage.getContent().stream()
+                .map(User::getId)
+                .toList();
+
+        // 해당 유저들 중 지원서가 있는 유저 id만 조회
+        List<Long> appliedUserIds = applicationRepository.findUserIdsByUserIdInAndStatusNot(userIds, ApplicationStatus.CANCELED);
+
+        // 조회한 id 목록에 포함되어 있는지 확인하여 true/false 매핑
+        List<UserSummaryDto> summaryDtos = userPage.getContent().stream()
+                .map(user -> UserSummaryDto.from(user, appliedUserIds.contains(user.getId())))
+                .toList();
+
+        return UserListResDto.of(userPage, summaryDtos);
     }
 
     public ApplicationResDto getApplication(Long adminId, Long applicationId) {
         validateAdminId(adminId);
         return applicationService.getApplication(applicationId);
+    }
+
+    public List<ApplicationOptionDto> getSubmittedApplicationOptions(Long adminId) {
+        validateAdminId(adminId);
+        return applicationService.getSubmittedApplicationOptions();
     }
 
     private Page<User> findUsers(String keyword , Pageable pageable){
