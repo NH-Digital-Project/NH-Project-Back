@@ -31,7 +31,7 @@ public class Project extends BaseEntity {
     @JoinColumn(name = "application_id", unique = true)
     private Application application;
 
-    private String farmName;
+    private String businessName;
 
     private String productCategory;
 
@@ -47,12 +47,12 @@ public class Project extends BaseEntity {
     private Integer sortOrder; // 순서 저장 필드 추가
 
     @Builder
-    private Project(Long id, Application application, String farmName, String productCategory,
+    private Project(Long id, Application application, String businessName, String productCategory,
         String thumbnailImageUrl, String description, ProjectStatus projectStatus,
         String happyBeanUrl, Integer sortOrder) {
         this.id = id;
         this.application = application;
-        this.farmName = farmName;
+        this.businessName = businessName;
         this.productCategory = productCategory;
         this.thumbnailImageUrl = thumbnailImageUrl;
         this.description = description;
@@ -61,10 +61,10 @@ public class Project extends BaseEntity {
         this.sortOrder = sortOrder != null ? sortOrder : 0; // 기본값 0
     }
 
-    public void update(String farmName, String productCategory,
+    public void update(String businessName, String productCategory,
                                   String thumbnailImageUrl, String description,
                                   ProjectStatus projectStatus, String happyBeanUrl) {
-        if (farmName != null) this.farmName = farmName;
+        if (businessName != null) this.businessName = businessName;
         if (productCategory != null) this.productCategory = productCategory;
         if (thumbnailImageUrl != null) {
             // isBlank()는 문자열이 비어있거나 공백만 있을 때 true를 반환

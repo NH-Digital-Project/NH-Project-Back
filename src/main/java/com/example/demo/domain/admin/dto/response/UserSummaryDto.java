@@ -13,12 +13,12 @@ public class UserSummaryDto {
     private final String phoneNumber;
     private final Boolean applied;
 
-    public static UserSummaryDto from(User user){
+    public static UserSummaryDto from(User user, Boolean applied) {
         return UserSummaryDto.builder()
                    .createdAt(user.getCreatedAt())
                    .userName(user.getUserName())
                    .phoneNumber(user.getPhoneNumber())
-                   .applied(user.getApplied())
+                   .applied(applied)
                    .build();
     }
 }
