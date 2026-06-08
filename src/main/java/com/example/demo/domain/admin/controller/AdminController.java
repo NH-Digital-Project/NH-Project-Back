@@ -1,10 +1,8 @@
 package com.example.demo.domain.admin.controller;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
-import com.example.demo.domain.admin.dto.request.AdminLoginReqDto;
 import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
 import com.example.demo.domain.admin.dto.response.AdminListResDto;
-import com.example.demo.domain.admin.dto.response.AdminLoginResDto;
 import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
 import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.service.AdminService;
@@ -77,12 +75,6 @@ public class AdminController {
     ) {
         return ResponseEntity.ok(
             ApiResponse.success(adminService.getApplications(principalDetails.getUserId(), pageable, keyword)));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AdminLoginResDto>> adminLogin(
-        @Valid @RequestBody AdminLoginReqDto reqDto) {
-        return ResponseEntity.ok(ApiResponse.success(adminService.adminLogin(reqDto)));
     }
 
     @GetMapping("/users")

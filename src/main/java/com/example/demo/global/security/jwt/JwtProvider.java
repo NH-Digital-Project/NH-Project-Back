@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,6 +47,10 @@ public class JwtProvider {
             .expiration(validity)
             .signWith(key)
             .compact();
+    }
+
+    public String createRefreshToken() {
+        return UUID.randomUUID().toString();
     }
 
     public Authentication getAuthentication(String token) {
