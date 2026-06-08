@@ -22,7 +22,7 @@ public class AuthController {
     private static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
     private static final int REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7일
     private static final String COOKIE_PATH = "/";
-    private static final String SAME_SITE_POLICY = "Strict";
+    private static final String SAME_SITE_POLICY = "Lax";
 
     private final AuthService authService;
 
@@ -31,7 +31,8 @@ public class AuthController {
         @Valid @RequestBody AdminLoginReqDto reqDto) {
 
         AdminLoginResDto resDto = authService.adminLogin(reqDto);
-        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, resDto.refreshToken())
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME,
+                resDto.refreshToken())
             .httpOnly(true)
             .secure(true) // 로컬에서는 false 설정
             .path(COOKIE_PATH)
@@ -43,5 +44,6 @@ public class AuthController {
             .header(HttpHeaders.SET_COOKIE, cookie.toString())
             .body(ApiResponse.success(resDto));
     }
+
 
 }

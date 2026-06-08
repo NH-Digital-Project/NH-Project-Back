@@ -1,7 +1,5 @@
 package com.example.demo.global.security.oauth;
 
-import com.example.demo.domain.auth.entity.RefreshToken;
-import com.example.demo.domain.auth.repository.RefreshTokenRepository;
 import com.example.demo.domain.auth.service.AuthService;
 import com.example.demo.global.security.PrincipalDetails;
 import com.example.demo.global.security.jwt.JwtProvider;
@@ -31,7 +29,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
     private static final int REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7일
     private static final String COOKIE_PATH = "/";
-    private static final String SAME_SITE_POLICY = "Strict";
+    private static final String SAME_SITE_POLICY = "Lax";
 
     private final JwtProvider jwtProvider;
     private final AuthService authService;
