@@ -1,8 +1,11 @@
 package com.example.demo.domain.admin.service;
 
 import com.example.demo.domain.admin.dto.request.AdminCreateReqDto;
-import com.example.demo.domain.admin.dto.request.AdminLoginReqDto;
-import com.example.demo.domain.admin.dto.response.*;
+import com.example.demo.domain.admin.dto.response.AdminCreateResDto;
+import com.example.demo.domain.admin.dto.response.AdminListResDto;
+import com.example.demo.domain.admin.dto.response.ApplicationListResDto;
+import com.example.demo.domain.admin.dto.response.UserListResDto;
+import com.example.demo.domain.admin.dto.response.UserSummaryDto;
 import com.example.demo.domain.admin.entity.Admin;
 import com.example.demo.domain.admin.repository.AdminRepository;
 import com.example.demo.domain.application.dto.response.ApplicationOptionDto;
@@ -15,13 +18,11 @@ import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
-import com.example.demo.global.security.jwt.JwtProvider;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,6 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final ApplicationRepository applicationRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final ApplicationService applicationService;
 
@@ -70,21 +70,6 @@ public class AdminService {
         List<Admin> admins = adminRepository.findAll();
 
         return AdminListResDto.from(admins);
-    }
-
-    public AdminLoginResDto adminLogin(AdminLoginReqDto reqDto) {
-        Admin admin = adminRepository.findByLoginId(reqDto.adminLoginId())
-            .orElseThrow(() -> new CustomException(ErrorCode.ADMIN_NOT_FOUND));
-
-        if (!passwordEncoder.matches(reqDto.password(), admin.getPassword())) {
-            throw new CustomException(ErrorCode.INVALID_PASSWORD);
-        }
-
-        String accessToken = jwtProvider.createAccessToken(
-            String.valueOf(admin.getId()), admin.getRole().name()
-        );
-
-        return new AdminLoginResDto(accessToken);
     }
 
 
@@ -175,6 +160,11 @@ public class AdminService {
     public List<ApplicationOptionDto> getSubmittedApplicationOptions(Long adminId) {
         validateAdminId(adminId);
         return applicationService.getSubmittedApplicationOptions();
+    }
+
+    public Admin getAdminByLoginId(String loginId) {
+        return adminRepository.findByLoginId(loginId)
+            .orElseThrow(() -> new CustomException(ErrorCode.ADMIN_NOT_FOUND));
     }
 
     private Page<User> findUsers(String keyword , Pageable pageable){
