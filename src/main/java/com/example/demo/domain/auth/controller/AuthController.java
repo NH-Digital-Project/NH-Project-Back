@@ -55,7 +55,7 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, resDto.refreshToken())
             .httpOnly(true)
-            .secure(false) // 로컬에서는 false
+            .secure(true) // 로컬에서는 false
             .path(COOKIE_PATH)
             .maxAge(REFRESH_TOKEN_MAX_AGE)
             .sameSite(SAME_SITE_POLICY)
