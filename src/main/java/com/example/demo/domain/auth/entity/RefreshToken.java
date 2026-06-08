@@ -45,4 +45,8 @@ public class RefreshToken extends BaseEntity {
         this.token = newToken;
         this.expiryDate = newExpiryDate;
     }
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(this.getExpiryDate());
+    }
 }

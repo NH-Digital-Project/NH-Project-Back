@@ -2,6 +2,7 @@ package com.example.demo.domain.auth.controller;
 
 import com.example.demo.domain.auth.dto.request.AdminLoginReqDto;
 import com.example.demo.domain.auth.dto.response.AdminLoginResDto;
+import com.example.demo.domain.auth.dto.response.ReissueResDto;
 import com.example.demo.domain.auth.service.AuthService;
 import com.example.demo.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,5 +47,23 @@ public class AuthController {
             .body(ApiResponse.success(resDto));
     }
 
+    @PostMapping("/reissue")
+    public ResponseEntity<ApiResponse<ReissueResDto>> reissue(
+        @CookieValue(value = "refreshToken", required = false) String refreshTokenValue) {
+
+        ReissueResDto resDto = authService.reissueToken(refreshTokenValue);
+
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, resDto.refreshToken())
+            .httpOnly(true)
+            .secure(false) // 로컬에서는 false
+            .path(COOKIE_PATH)
+            .maxAge(REFRESH_TOKEN_MAX_AGE)
+            .sameSite(SAME_SITE_POLICY)
+            .build();
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, cookie.toString())
+            .body(ApiResponse.success(resDto));
+    }
 
 }

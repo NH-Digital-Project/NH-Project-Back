@@ -1,9 +1,10 @@
 package com.example.demo.domain.auth.service;
 
-import com.example.demo.domain.admin.entity.Admin;
-import com.example.demo.domain.admin.service.AdminService;
 import com.example.demo.domain.auth.dto.request.AdminLoginReqDto;
 import com.example.demo.domain.auth.dto.response.AdminLoginResDto;
+import com.example.demo.domain.admin.entity.Admin;
+import com.example.demo.domain.admin.service.AdminService;
+import com.example.demo.domain.auth.dto.response.ReissueResDto;
 import com.example.demo.domain.auth.entity.RefreshToken;
 import com.example.demo.domain.auth.repository.RefreshTokenRepository;
 import com.example.demo.global.exception.CustomException;
@@ -49,6 +50,27 @@ public class AuthService {
                 () -> refreshRepository.save(
                     RefreshToken.from(principalId, role, newRefreshToken, newExpiryDate))
             );
+    }
+
+    @Transactional
+    public ReissueResDto reissueToken(String refreshTokenValue) {
+        if (refreshTokenValue == null || refreshTokenValue.isBlank()) {
+            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+
+        RefreshToken refreshToken = refreshRepository.findByToken(refreshTokenValue)
+            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_REFRESH_TOKEN));
+
+        if (refreshToken.isExpired()) {
+            refreshRepository.delete(refreshToken);
+            throw new CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+        }
+
+        TokenPair tokenPair = issueTokens(refreshToken.getPrincipalId(), refreshToken.getRole());
+
+        refreshToken.updateToken(tokenPair.refreshToken, tokenPair.expiryDate);
+
+        return new ReissueResDto(tokenPair.accessToken, tokenPair.refreshToken);
     }
 
 
