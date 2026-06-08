@@ -39,14 +39,19 @@ public class AuthService {
         String newRefreshToken = jwtProvider.createRefreshToken();
         LocalDateTime newExpiryDate = LocalDateTime.now().plusDays(7);
 
-        refreshRepository.findByPrincipalIdAndRole(admin.getId(), admin.getRole().name())
+        issueRefreshToken(admin.getId(), admin.getRole().name(), newRefreshToken, newExpiryDate);
+
+        return new AdminLoginResDto(accessToken, newRefreshToken);
+    }
+
+    @Transactional
+    public void issueRefreshToken(Long principalId, String role, String newRefreshToken,
+        LocalDateTime newExpiryDate) {
+        refreshRepository.findByPrincipalIdAndRole(principalId, role)
             .ifPresentOrElse(
                 token -> token.updateToken(newRefreshToken, newExpiryDate),
                 () -> refreshRepository.save(
-                    RefreshToken.from(admin.getId(), admin.getRole().name(), newRefreshToken,
-                        newExpiryDate))
+                    RefreshToken.from(principalId, role, newRefreshToken, newExpiryDate))
             );
-
-        return new AdminLoginResDto(accessToken, newRefreshToken);
     }
 }
