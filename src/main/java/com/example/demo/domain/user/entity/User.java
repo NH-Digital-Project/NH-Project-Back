@@ -26,6 +26,8 @@ public class User extends BaseSoftDeleteEntity {
 
     private String oauthId;
 
+    private String naverAccessToken;
+
     private String userName;
 
     private String phoneNumber;
@@ -53,5 +55,9 @@ public class User extends BaseSoftDeleteEntity {
 
     public void updatePhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void updateNaverAccessToken(String naverAccessToken) {
+        this.naverAccessToken = naverAccessToken;
     }
 }

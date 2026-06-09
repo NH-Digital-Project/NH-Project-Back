@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class CustomOAuth2UserService implements OAuth2UserService {
     private final UserRepository userRepository;
 
     // 로그인 성공 후 네이버에서 받은 응답 파싱 후 User 객체 생성 또는 업데이트
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -29,6 +31,8 @@ public class CustomOAuth2UserService implements OAuth2UserService {
         // OAuth2UserRequest yml 설정 정보, 네이버에서 주는 액세스 토큰을 담아둔 객체
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
+        String naverAccessToken = userRequest.getAccessToken().getTokenValue();
+
         // 네이버 키 : response
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
             .getUserInfoEndpoint().getUserNameAttributeName();
@@ -37,6 +41,7 @@ public class CustomOAuth2UserService implements OAuth2UserService {
             oAuth2User.getAttributes());
 
         User user = saveOrUpdate(attributes);
+        user.updateNaverAccessToken(naverAccessToken);
 
         return new PrincipalDetails(
             user.getId(), user.getRole().name(), attributes.getAttributes()
