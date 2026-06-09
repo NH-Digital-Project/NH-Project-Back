@@ -8,6 +8,7 @@ import com.example.demo.domain.user.entity.User;
 import com.example.demo.domain.user.repository.UserRepository;
 import com.example.demo.global.exception.CustomException;
 import com.example.demo.global.exception.ErrorCode;
+import com.example.demo.global.security.oauth.OAuth2UnlinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final OAuth2UnlinkService oAuth2UnlinkService;
 
 
     public MyInfoResponse getMyInfo(Long userId) {
-      
+
         User user = getOrElseThrow(userId);
 
         return MyInfoResponse.from(user);
@@ -34,8 +36,7 @@ public class UserService {
         User user = getOrElseThrow(userId);
 
         user.withdraw();
-
-        // Todo 지원서 제출 상태에서도 탈퇴 가능 여부 확인
+        oAuth2UnlinkService.unlinkNaverAccount(user.getNaverAccessToken());
     }
 
     @Transactional

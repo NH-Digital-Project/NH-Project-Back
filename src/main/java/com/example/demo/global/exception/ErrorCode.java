@@ -14,6 +14,7 @@ public enum ErrorCode {
     // Auth
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "RefreshToken이 없습니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 RefreshToken입니다."),
+    NAVER_UNLINK_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "네이버 연동 해제 통신에 실패했습니다."),
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
