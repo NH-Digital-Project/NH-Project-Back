@@ -38,7 +38,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     // 검색어와 상태 목록을 동시에 적용하는 조회
     @Query("SELECT a FROM Application a WHERE " +
-            "(a.userName LIKE %:keyword% OR a.businessName LIKE %:keyword%) " +
+            "(a.userName LIKE CONCAT('%', :keyword, '%') OR a.businessName LIKE CONCAT('%', :keyword, '%')) " +
             "AND a.status IN :statuses")
     Page<Application> findByKeywordAndStatuses(
             @Param("keyword") String keyword,
