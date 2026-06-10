@@ -8,6 +8,7 @@ import com.example.demo.domain.admin.dto.response.UserListResDto;
 import com.example.demo.domain.admin.service.AdminService;
 import com.example.demo.domain.application.dto.response.ApplicationOptionDto;
 import com.example.demo.domain.application.dto.response.ApplicationResDto;
+import com.example.demo.domain.application.status.ApplicationStatus;
 import com.example.demo.global.common.dto.ApiResponse;
 import com.example.demo.global.security.PrincipalDetails;
 import jakarta.validation.Valid;
@@ -71,10 +72,11 @@ public class AdminController {
     public ResponseEntity<ApiResponse<ApplicationListResDto>> getApplications(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PageableDefault(size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
-        @RequestParam(required = false) String keyword
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) List<ApplicationStatus> status
     ) {
         return ResponseEntity.ok(
-            ApiResponse.success(adminService.getApplications(principalDetails.getUserId(), pageable, keyword)));
+            ApiResponse.success(adminService.getApplications(principalDetails.getUserId(), pageable, keyword, status)));
     }
 
     @GetMapping("/users")
