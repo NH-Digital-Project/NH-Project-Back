@@ -92,12 +92,11 @@ public class AdminService {
     }
 
 
-    public ApplicationListResDto getApplications(Long userId , Pageable pageable, String keyword) {
+    public ApplicationListResDto getApplications(Long userId , Pageable pageable, String keyword, List<ApplicationStatus> status) {
 
         validateAdminId(userId);
 
-
-        Page<Application> applicationPage = findApplications(keyword, pageable);
+        Page<Application> applicationPage = findApplications(keyword, status, pageable);
 
         if (applicationPage.getTotalElements() == 0) {
             return ApplicationListResDto.from(applicationPage);
@@ -106,19 +105,24 @@ public class AdminService {
         if (pageable.getPageNumber() >= applicationPage.getTotalPages()) {
             pageable = PageRequest.of(applicationPage.getTotalPages() - 1, pageable.getPageSize(),
                 pageable.getSort());
-            applicationPage = findApplications(keyword, pageable);
+            applicationPage = findApplications(keyword, status, pageable);
         }
-
-
-
 
         return ApplicationListResDto.from(applicationPage);
     }
-    private Page<Application> findApplications(String keyword, Pageable pageable) {
-        if (keyword == null || keyword.isBlank()) {
+    private Page<Application> findApplications(String keyword, List<ApplicationStatus> status, Pageable pageable) {
+        boolean hasKeyword = (keyword != null && !keyword.isBlank());
+        boolean hasStatuses = (status != null && !status.isEmpty());
+
+        if(hasKeyword && hasStatuses) {
+            return applicationRepository.findByKeywordAndStatuses(keyword, status, pageable);
+        } else if(hasKeyword) {
+            return applicationRepository.findByUserNameContainingOrBusinessNameContaining(keyword, keyword, pageable);
+        } else if(hasStatuses) {
+            return applicationRepository.findByStatusIn(status, pageable);
+        } else {
             return applicationRepository.findAll(pageable);
         }
-        return applicationRepository.findByUserNameContainingOrBusinessNameContaining(keyword, keyword, pageable);
     }
 
     public UserListResDto getUsers(Long userId, Pageable pageable, String keyword) {

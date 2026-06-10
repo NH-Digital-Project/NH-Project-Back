@@ -33,4 +33,15 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("SELECT a.user.id FROM Application a WHERE a.user.id IN :userIds AND a.status <> :status")
     List<Long> findUserIdsByUserIdInAndStatusNot(@Param("userIds") List<Long> userIds, @Param("status") ApplicationStatus status);
 
+    // 상태 목록에 따른 조회
+    Page<Application> findByStatusIn(List<ApplicationStatus> statuses, Pageable pageable);
+
+    // 검색어와 상태 목록을 동시에 적용하는 조회
+    @Query("SELECT a FROM Application a WHERE " +
+            "(a.userName LIKE CONCAT('%', :keyword, '%') OR a.businessName LIKE CONCAT('%', :keyword, '%')) " +
+            "AND a.status IN :statuses")
+    Page<Application> findByKeywordAndStatuses(
+            @Param("keyword") String keyword,
+            @Param("statuses") List<ApplicationStatus> statuses,
+            Pageable pageable);
 }
