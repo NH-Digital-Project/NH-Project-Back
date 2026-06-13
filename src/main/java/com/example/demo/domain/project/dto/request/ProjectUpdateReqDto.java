@@ -1,6 +1,7 @@
 package com.example.demo.domain.project.dto.request;
 
 import com.example.demo.domain.project.entity.ProjectStatus;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,16 +12,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectUpdateReqDto {
 
-    // 빈 문자열, 공백 입력을 차단하기 위해 @Pattern 추가
-    @Pattern(regexp = ".*\\S.*", message = "사업자명은 공백만으로 비워둘 수 없습니다.")
+    @NotBlank(message = "사업자명은 필수입니다.")
     private String businessName;
 
-    @Pattern(regexp = ".*\\S.*", message = "품목은 공백만으로 비워둘 수 없습니다.")
+    @NotBlank(message = "품목은 필수입니다.")
     private String productCategory;
 
     private String thumbnailImageUrl;
 
-    @Pattern(regexp = ".*\\S.*", message = "소개글은 공백만으로 비워둘 수 없습니다.")
+    @NotBlank(message = "소개글은 필수입니다.")
     private String description;
 
     private ProjectStatus status;
